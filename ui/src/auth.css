@@ -1,0 +1,265 @@
+/**
+ * Auth pages — sign in, sign up, password reset. Vercel-style.
+ *
+ * One centred card on the paper canvas. Tokens are redeclared here rather than
+ * imported from community.css for the same reason that file does not import
+ * tutorials.css: each page's styling loads and edits on its own (CLAUDE.md).
+ * Values are Vercel's, per
+ * docs/superpowers/specs/2026-09-19-vercel-style-catalogue-preview-design.md:
+ * #fafafa canvas, #ffffff card with a stacked-ring hairline, 6px radius,
+ * Geist Sans, one filled black button, no colour.
+ *
+ * No header band. The card is the whole page, so it sits in the vertical
+ * middle of the space under the navbar — a form at the top-left of a blank
+ * page reads as a broken layout. The page is a flex child of the layout's
+ * full-height column, so it takes whatever the navbar leaves rather than
+ * subtracting a navbar height it would have to know.
+ */
+
+.auth {
+  --ink: #171717;
+  --body: #4d4d4d;
+  --slate: #666666;
+  --muted: #8f8f8f;
+  --rule: #ebebeb;
+  --field: #ebebeb;
+  --panel: #fafafa;
+  --surface: #ffffff;
+  --ring: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+  --radius: 6px;
+  --sans: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background: var(--panel);
+  font-family: var(--sans);
+  font-feature-settings: "calt" 0, "rlig", "ss11";
+  color: var(--ink);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--ring);
+  padding: 28px 28px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-card__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.auth-card__lead {
+  margin: 0;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-field__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.auth-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.auth-input::placeholder {
+  color: var(--muted);
+}
+
+.auth-input:focus {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.auth-input--invalid {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* Password fields carry a reveal toggle inside the box: a ghost icon button
+   at the right edge, slate at rest and ink on hover, the way every secondary
+   control in the system behaves. The input pads for it so a long password
+   never runs under the eye. */
+.auth-password {
+  position: relative;
+}
+
+.auth-input--password {
+  padding-right: 40px;
+}
+
+.auth-reveal {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--slate);
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-reveal svg {
+  width: 18px;
+  height: 18px;
+}
+
+.auth-reveal:hover {
+  color: var(--ink);
+  background: var(--panel);
+}
+
+.auth-reveal:focus-visible {
+  outline: none;
+  color: var(--ink);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+}
+
+/* Errors say what to do, not that something is invalid (DESIGN.md §8). The
+   system has no red: an error is ink at medium weight. */
+.auth-error {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* A result of the last action — "check your inbox" — not an error. A hairline
+   panel on the canvas tone; the ✓ is the terminal's confirmation mark. */
+.auth-notice {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 0 0 1px var(--rule);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--body);
+}
+
+.auth-notice::before {
+  content: "✓ ";
+  color: #297a3a;
+  font-family: "Geist Mono", ui-monospace, monospace;
+}
+
+/* The filled black primary. The one thing on the page that reaches #171717
+   as a fill.
+
+   Scoped under `.auth-card` on purpose: Tailwind's preflight (index.css)
+   zeroes `[type="submit"]`'s background at the same specificity as a lone
+   class, so which rule wins depends on stylesheet order, and Next orders a
+   route's CSS differently in dev and in a production build. On Vercel the
+   preflight won and the button was a white box with white text until the
+   hover rule (higher specificity) filled it. The extra ancestor makes the
+   fill win regardless of order. The hover/disabled/focus rules below still
+   apply: they are later in the file at equal or higher specificity. */
+.auth-card .auth-button {
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  margin-top: 4px;
+}
+
+.auth-button:hover:not(:disabled) {
+  background: #000000;
+}
+
+.auth-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.auth-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+}
+
+.auth-link {
+  font-size: 13px;
+  color: var(--body);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-link:hover {
+  color: var(--ink);
+}
+
+.auth-foot {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--slate);
+}

@@ -1,0 +1,160 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+  color: #171717;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
+    monospace;
+}
+
+/* Layout tokens every page reads. `--nav-h` is the navbar's height: one row
+   on desktop, two below 1120px (see .nav-bar below). `--page-h` is what is
+   left for a page under it. Pages that fill the viewport set
+   `height: var(--page-h)` instead of subtracting a navbar height they would
+   otherwise have to know. `dvh` follows the mobile browser toolbar as it
+   hides; `vh` does not, and the fallback is for browsers without `dvh`. */
+:root {
+  --nav-h: 64px;
+  --page-h: calc(100vh - var(--nav-h));
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --page-h: calc(100dvh - var(--nav-h));
+  }
+}
+
+@media (max-width: 1120px) {
+  :root {
+    --nav-h: 104px;
+  }
+}
+
+/* The flex column that holds the navbar and the page. Tailwind 3.3 has no
+   `h-dvh`, so the height is set here: the second declaration wins where
+   `dvh` is understood and is ignored where it is not. */
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Navbar. It is a fixed 64px, so the links scroll sideways rather than
+   wrapping — and the native horizontal bar is hidden, because at 15px tall it
+   would take a quarter of the bar. Geist is the preview's face; the rest of
+   the bar's values are Tailwind classes in Navbar.tsx. */
+.nav-bar {
+  font-family: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.grad {
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 4%,
+    rgba(255, 255, 255, 0) 46%
+  );
+}
+
+.product-container {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  margin: 60px;
+  height: 100%;
+}
+
+/* Left product pane. Fills the band under the navbar, the same band the fixed
+   chat panel occupies. */
+.product-pane {
+  width: 40vw;
+  height: var(--page-h);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ebebeb;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-details {
+  text-align: left;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.highlights {
+  list-style: disc;
+  padding: 0;
+}
+
+ul {
+  text-align: left;
+  list-style-position: inside;
+  margin-inline-start: 20px;
+}
+
+li {
+  margin-bottom: 2px;
+}
+
+.price {
+  color: black;
+  font-size: 24px;
+}
+
+.purchase-info {
+  margin: 30px 0;
+}
+
+.purchase-info input {
+  margin-right: 25px;
+}
+
+.purchase-info button {
+  background-color: #76b900;
+  color: #343434;
+  border: 343434;
+  padding: 10px 200px;
+  cursor: pointer;
+}

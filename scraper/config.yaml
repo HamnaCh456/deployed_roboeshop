@@ -1,0 +1,98 @@
+# Sites the pipeline crawls with `python run.py --from-config`.
+# Add a URL here and it is picked up on the next run - no code change needed.
+#
+# adapter:  omit to auto-detect (shopify -> woocommerce -> generic).
+# max_depth / max_pages apply only to the generic crawl4ai adapter.
+
+sites:
+  - name: Robo.pk
+    url: https://robo.pk
+    enabled: true
+    # Shopify: read straight from /products.json, then deep-crawl each product page.
+    adapter: shopify
+
+  # The other two competitors named in the proposal. Both probed 2026-08-15.
+  #
+  # IndusRoboTix runs WooCommerce with the Store API left open, so the
+  # woocommerce adapter reads its catalog as JSON - verified working. Its API
+  # exposed only 4 products at the time of checking, which may mean a small
+  # catalog or that most products are not published through the Store API.
+  # If it looks short, re-run with `adapter: generic` to deep-crawl the HTML.
+  - name: IndusRoboTix
+    url: https://indusrobotix.com
+    enabled: false
+    adapter: woocommerce
+
+  # Robostan runs WooCommerce with the Store API open - 830 products as JSON.
+  #
+  # It sits behind Hostinger's CDN WAF (`server: hcdn`), which refused the
+  # scraper with HTTP 403 and a "Checking your browser" page. That is a header
+  # fingerprint check, not a JS or cookie challenge: a request carrying only a
+  # User-Agent is blocked, the same request with a full browser header set is
+  # served, and a headless browser passed on its first request with no clearance
+  # cookie ever set. `http.BROWSER_HEADERS` is what makes this site reachable -
+  # if it ever 403s again, that is the first place to look.
+  - name: Robostan
+    url: https://robostan.pk
+    enabled: true
+    adapter: woocommerce
+
+  # Unitree's own storefront: Shopify, 30 products, and the reason the pipeline
+  # now reads `/meta.json`. It prices in USD while every other site here is PKR,
+  # and `Robot.currency` defaults to PKR, so its prices were being recorded in
+  # the wrong currency and compared against rupees.
+  #
+  # This is a manufacturer's store, not a reseller: `vendor` is "UnitreeRobotics"
+  # on all 30 products and is the real brand, which is why the retailer test in
+  # enrich.py had to stop rejecting it.
+  - name: Unitree
+    url: https://shop.unitree.com
+    enabled: true
+    adapter: shopify
+
+  # instock.pk is Magento. Its REST API answers 401 and its sitemap times out,
+  # but `/graphql` is open and unauthenticated - Magento's own storefront JS uses
+  # it - and hands over all 2,244 products in 45 requests.
+  #
+  # Note the catalog is not purely robotics: it also stocks 3D printers, generic
+  # components and some medical supplies. Set `search:` to scope a crawl, e.g.
+  # `search: robot`, if you want only the robotics slice.
+  - name: InStock.pk
+    url: https://instock.pk
+    enabled: true
+    adapter: magento
+
+  # nexarobots.com is NOT a shop. It looked like WooCommerce because it is
+  # WordPress, but it has zero add-to-cart markup - it is a Pudu/Pepper
+  # distributor's brochure site. Each robot is a plain WordPress page and no
+  # price is published; rows come back with availability "Enquiry / POA".
+  #
+  # These are commercial service robots (delivery, cleaning, disinfection), which
+  # is why enrich.py gained the "Service & Industrial Robots" category - the
+  # component taxonomy was filing BellaBot under "Enclosure & Mounting".
+  - name: Nexa Robots
+    url: https://www.nexarobots.com
+    enabled: true
+    adapter: catalog_site
+
+  # robotshop.com is blocked and deliberately left disabled - see README
+  # ("Sites that cannot be crawled"). Cloudflare bot management refuses the
+  # scraper, a headless browser AND /robots.txt itself with HTTP 403. Use
+  # `--from-html` with a page you saved from your own browser instead.
+  - name: RobotShop
+    url: https://www.robotshop.com
+    enabled: false
+
+  # roboticspk.com resolves and returns HTTP 200, but the body is only ~114
+  # bytes - a parked or placeholder page, with no catalog to crawl. The
+  # proposal calls this competitor "RoboticPK"; confirm the real domain before
+  # enabling. robotics.pk also responds but its platform is unrecognised.
+  - name: RoboticsPK
+    url: https://roboticspk.com
+    enabled: false
+    max_depth: 3
+    max_pages: 400
+
+# Where `--images` puts downloaded product photos. This is the folder the
+# existing RobotEShop UI already serves from.
+image_dir: ../ui/public/images

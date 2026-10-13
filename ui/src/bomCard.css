@@ -1,0 +1,128 @@
+/* Parts-list table emitted by the generate_bom tool (components/chatbox/BomCard.tsx).
+   A Bordered Card from DESIGN.md: white surface, hairline ring, Geist Mono for
+   prices, labels and stamps. The only chromatic colour is Terminal Green, on the
+   within-budget confirmation, which is what DESIGN.md reserves it for. */
+
+.bom-card {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+  border-radius: 6px;
+  padding: 16px;
+  color: #4d4d4d;
+  font-family: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bom-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.bom-card__title {
+  color: #171717;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bom-card__meta,
+.bom-card__table th,
+.bom-card__budget-ok,
+.bom-card__budget-over {
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+}
+
+.bom-card__meta {
+  color: #666666;
+}
+
+.bom-card__table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.bom-card__table th {
+  background: #fafafa;
+  color: #666666;
+  font-weight: 500;
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.bom-card__table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #ebebeb;
+  color: #4d4d4d;
+  vertical-align: middle;
+}
+
+/* A role the catalogue had nothing for. */
+.bom-card__row--missing td {
+  color: #a8a8a8;
+}
+
+.bom-card__name {
+  color: #171717;
+}
+
+.bom-card__out-of-stock {
+  color: #8f8f8f;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.bom-card__buy-link {
+  color: #171717;
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.bom-card__buy-link:hover {
+  color: #4d4d4d;
+}
+
+.bom-card__footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #ebebeb;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bom-card__total {
+  color: #171717;
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.bom-card__budget-ok {
+  color: #297a3a;
+}
+
+.bom-card__budget-over {
+  color: #171717;
+}
+
+.bom-card__missing-note {
+  margin: 0;
+  color: #666666;
+  font-size: 12px;
+  line-height: 1.4;
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+  <!-- Favicon: the Servo mark centred in a square. Black on a light tab
+       strip, white on a dark one. Master geometry: components/Mark.tsx. -->
+  <style>
+    .mark { fill: #000000; }
+    @media (prefers-color-scheme: dark) { .mark { fill: #ffffff; } }
+  </style>
+  <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+    <rect width="24" height="24" fill="#fff"/>
+    <circle cx="12" cy="18" r="2.2" fill="#000"/>
+    <path d="M12 18 L19.5 10.5" stroke="#000" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </mask>
+  <path class="mark" d="M0 18 A12 12 0 0 1 24 18 Z" mask="url(#cut)"/>
+</svg>

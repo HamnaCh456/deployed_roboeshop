@@ -1,0 +1,1056 @@
+/**
+ * Tutorials page — Vercel-style.
+ *
+ * Tokens are Vercel's, per
+ * docs/superpowers/specs/2026-09-19-vercel-style-catalogue-preview-design.md.
+ * The system is achromatic: canvas #fafafa, panels #ffffff with a stacked-ring
+ * hairline, text on the #171717 / #4d4d4d / #666 scale, no green, no amber.
+ * The one exception to "no shadows" is the grid card, which carries a real
+ * drop shadow and a hover lift; see CARDS below. Three rules shape the page:
+ *
+ *   - Geist Sans for reading. Geist Mono, small and uppercase, for every
+ *     label, eyebrow, count and figure.
+ *   - Every number a reader compares — a price, a runtime, a part count — is
+ *     set in mono with tabular figures, so they line up in a column.
+ *   - Figures are ranked, not uniform. See "FIGURES" below.
+ *
+ * The old token names (--ink, --slate, --rule …) are kept so the selectors
+ * below read the same; only their values changed.
+ */
+
+.tutorials {
+  --ink: #171717;
+  --slate: #666666;
+  --body: #4d4d4d;
+  --muted: #8f8f8f;
+  --strong: #171717;
+  --rule: #ebebeb;
+  --hairline: #ebebeb;
+  --field: #ebebeb;
+  --ash: #c9c9c9;
+
+  --panel: #fafafa;
+  --media: #fafafa;
+  --surface: #ffffff;
+  --ring: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+  --ring-hover: 0 0 0 1px rgba(0, 0, 0, 0.16), 0 0 0 2px #fafafa;
+  --radius: 6px;
+
+  --sans: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* The band under the navbar, matching .catalog. */
+  height: var(--page-h);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--panel);
+  font-family: var(--sans);
+  font-feature-settings: "calt" 0, "rlig", "ss11";
+  color: var(--ink);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ash) transparent;
+}
+
+.tutorials::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tutorials::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tutorials::-webkit-scrollbar-thumb {
+  background: var(--ash);
+  border-radius: 4px;
+}
+
+.tutorials::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+.tutorials :focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--ink);
+  border-radius: var(--radius);
+}
+
+/* The mono "stamp": tiny, uppercase, wide-tracked. Every label on the page
+   that is not prose is one of these. */
+.tut-eyebrow,
+.tut-rail__legend,
+.tut-bom__unit {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+}
+
+/* FIGURES
+   =======
+   Every number used to be set at roughly one size, so a kit total, a step
+   count and a facet count all carried the same weight — which is another way
+   of saying none of them carried any. They are ranked in three tiers, and the
+   membership of each tier is listed here rather than scattered through the
+   file, so the ranking stays legible.
+
+   Lining tabular figures throughout. */
+
+/* Tier 1 — the number a decision turns on. */
+.tut-bom__total .tut-bom__cost {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* The kit total is the one figure with nothing above it in the hierarchy, so
+   it takes the extra step up. */
+.tut-bom__total .tut-bom__cost {
+  font-size: 16px;
+}
+
+/* Tier 2 — a figure read in passing. */
+.tut-bom__cost,
+.tut-hero__coverage b,
+.tut-toolbar__count b {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Tier 3 — bookkeeping you should be able to ignore. */
+.tut-bom__qty,
+.tut-rail__count {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+/* The currency is a mark on the amount, not part of it. Setting "Rs" at the
+   amount's own size and weight is what made a price read as a string. */
+.fig__unit {
+  font-size: 0.7em;
+  font-weight: 400;
+  letter-spacing: 0.071em;
+  color: var(--slate);
+  margin-right: 0.36em;
+}
+
+.tut-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* HERO
+   ====
+   No stat tiles and no gradient. Coverage used to sit here as a strip of tiny
+   uppercase figures joined by middots, which is a decoration pretending to be
+   data. It is a sentence now, and only the figures inside it are set apart.
+
+   The band is a label on the page, not a landing page. It was a 30px display
+   title over three lines of lead and a second paragraph — ~250px of mostly
+   nothing above the fold. Everything here is sized to keep the whole header
+   near 110px: the title steps down to 20px on one line, the lead runs wider
+   so it wraps at two, and the search sits alongside rather than under. */
+.tut-hero {
+  background: var(--panel);
+  border-bottom: 1px solid var(--hairline);
+  padding: 14px 0 12px;
+}
+
+.tut-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 12px 44px;
+  align-items: center;
+}
+
+.tut-hero__title {
+  margin: 0;
+  color: var(--strong);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+/* Wide on purpose. A 52ch measure is right for an article and wrong for a
+   header — here it just buys extra lines nobody reads more slowly for. */
+.tut-hero__lead {
+  margin: 4px 0 0;
+  max-width: 88ch;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.tut-hero__coverage {
+  margin: 2px 0 0;
+  color: var(--slate);
+  font-size: 13px;
+  line-height: 1.54;
+}
+
+.tut-hero__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tut-hero__lead b,
+.tut-hero__coverage b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.tut-hero__note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* Search sits in the hero because finding a part by name is the way most
+   people arrive here — they already own the sensor. */
+.tut-search {
+  position: relative;
+}
+
+.tut-search input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.tut-search input::placeholder {
+  color: var(--muted);
+}
+
+.tut-search input:focus {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* BODY: filter rail + results
+   ========================== */
+.tut-body {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  gap: 28px;
+  padding: 20px 0 48px;
+  align-items: start;
+}
+
+.tut-rail {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tut-rail__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tut-rail__legend {
+  padding: 0;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.tut-rail__group + .tut-rail__group {
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.tut-rail__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.43;
+  color: var(--body);
+  cursor: pointer;
+}
+
+.tut-rail__option:hover .tut-rail__label {
+  color: var(--ink);
+}
+
+.tut-rail__option input {
+  accent-color: var(--ink);
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.tut-rail__label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tut-rail__count {
+  flex: 0 0 auto;
+}
+
+.tut-rail__option--off .tut-rail__label,
+.tut-rail__option--off .tut-rail__count {
+  color: var(--ash);
+}
+
+/* BUTTONS
+   =======
+   Ghost outline is the secondary action: transparent, charcoal text, a
+   hairline ring, and it inverts to the filled black primary on hover. The
+   filled black button is the one element allowed to reach #171717 as a fill. */
+.tut-button,
+.tut-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--field);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--body);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tut-button:hover,
+.tut-clear:hover {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.tut-clear {
+  align-self: flex-start;
+}
+
+/* FEATURED BUILD
+   ==============
+   The page's one loud element. Half of it is a bill of materials priced from
+   the catalogue, which is the thing a course site cannot show and a parts shop
+   with no tutorials cannot either. */
+.tut-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--ring);
+}
+
+.tut-featured__media {
+  position: relative;
+  background: var(--media);
+  border-right: 1px solid var(--rule);
+  min-height: 260px;
+}
+
+/* Absolute rather than height:100% — a grid item's height is not a resolvable
+   percentage basis, so the image would otherwise sit at its natural size with
+   white bands above and below. */
+.tut-featured__media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tut-featured__body {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The mono stamp above the title — sized by the eyebrow group at the top. */
+.tut-eyebrow {
+  margin: 0;
+  color: var(--slate);
+}
+
+.tut-featured__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.tut-featured__summary {
+  margin: 0;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* The receipt. Mono figures, right-aligned, one rule above the total — read it
+   the way you read a till slip. Hairline-bordered on the canvas tone, so it is
+   a panel inside the card rather than a second card. */
+.tut-bom {
+  margin: 4px 0 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--media);
+  padding: 12px 14px;
+}
+
+.tut-bom__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tut-bom__legend {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tut-bom__unit {
+  color: var(--muted);
+}
+
+.tut-bom__table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ink);
+}
+
+.tut-bom__table td {
+  padding: 4px 0;
+  vertical-align: baseline;
+}
+
+/* Part names stay in the UI face. Only the figures are mono — running the
+   whole ledger in Plex Mono made the names shout as loudly as the prices. */
+.tut-bom__name {
+  width: 100%;
+  padding-right: 12px !important;
+  color: var(--body);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.tut-bom__qty {
+  text-align: right;
+  white-space: nowrap;
+  padding-right: 14px !important;
+  color: var(--muted);
+}
+
+.tut-bom__cost {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tut-bom__total td {
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+
+.tut-bom__total .tut-bom__name {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tut-featured__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* The primary action on the featured card is the filled black button. */
+.tut-featured__actions .tut-button:not(.tut-button--quiet) {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.tut-featured__actions .tut-button:not(.tut-button--quiet):hover {
+  background: #000000;
+  box-shadow: 0 0 0 1px #000000;
+}
+
+/* The quiet variant is a text link, the lowest-weight interactive. */
+.tut-button--quiet {
+  height: auto;
+  padding: 0;
+  box-shadow: none;
+  color: var(--body);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tut-button--quiet:hover {
+  background: none;
+  box-shadow: none;
+  color: var(--ink);
+}
+
+/* TOOLBAR
+   ======= */
+.tut-toolbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 28px 0 12px;
+}
+
+/* Sentence case, not an uppercase mono tag. The count is a fact about the
+   page, and facts are written, not stamped. */
+.tut-toolbar__count {
+  margin: 0;
+  font-size: 14px;
+  color: var(--body);
+}
+
+.tut-toolbar__count b {
+  color: var(--ink);
+  font-weight: 400;
+  margin-right: 1px;
+}
+
+/* The label is a mono stamp; the select is bare, and shows its box on hover. */
+.tut-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.tut-sort select {
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  padding: 4px 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.tut-sort select:hover {
+  background: var(--hairline);
+}
+
+/* CARDS
+   =====
+   The photo card, per docs/superpowers/specs/2026-09-19-photo-card-design.md.
+   Shaped like a course card: the thumbnail fills the top edge to edge, a
+   white body below it holds three lines and a footer, and the card carries a
+   real drop shadow and a hover lift. .pcard in catalog.css is the same card
+   for a product.
+
+   Two deliberate departures from DESIGN.md's Vercel rules, both recorded
+   there under "Photo Card":
+
+     - Depth is a drop shadow, not a hairline ring. The ring read as flat
+       next to a real product card, and a photo with a ring around it looks
+       like a sticker. The shadow is wide and soft (large blur, negative
+       spread) so it reads as the card resting on the canvas, not a border.
+     - The radius is 16px, not 6px. A 6px corner on a 300px-tall photo reads
+       as a screenshot.
+
+   Everything else holds: Geist Sans and Geist Mono, tabular figures, the
+   achromatic scale, and the one-link-per-card rule. No pills: a pill per
+   fact was the congestion, and the format and level read fine as icon +
+   word in the footer. */
+
+.tut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin: 0;
+  /* Room for the shadow to fall without being clipped by the scroller. */
+  padding: 4px 4px 24px;
+  list-style: none;
+}
+
+/* The card fills its grid cell, so the footers across a row land on one
+   baseline even when one title runs longer than its neighbours. */
+.tut-grid > li {
+  display: flex;
+}
+
+.tut-grid > li > .tut-card {
+  flex: 1 1 auto;
+}
+
+.tut-card {
+  --card-radius: 16px;
+  --card-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 10px 28px -8px rgba(0, 0, 0, 0.22);
+  --card-shadow-hover:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 24px 48px -12px rgba(0, 0, 0, 0.34);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  /* Safari needs this or the zoomed image escapes the rounded corners. */
+  isolation: isolate;
+  transform: translateZ(0);
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tut-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Edge to edge, cropped to fill, like a course card's cover. The box is
+   3:2 rather than 16:9 because most publisher covers are 4:3 posters with
+   a title baked in near the top: 3:2 trims 5% off the top and bottom of
+   one, which spares the title; 16:9 would take 12% and cut through it. */
+.tut-card__media {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tut-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Slower than the lift, so the zoom is still settling when the card has
+     already arrived. That lag is what makes it feel like a photo and not a
+     block sliding up. */
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.tut-card:hover .tut-card__media img {
+  transform: scale(1.05);
+}
+
+/* Thumbnails come from the Internet Archive and a few were never captured.
+   A dark tile with the same words as the catalogue's empty photo. */
+.tut-card__media--empty {
+  background: linear-gradient(160deg, #2c302c 0%, #151715 100%);
+}
+
+.tut-card__nophoto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* The one mark allowed on the photo: a runtime, on videos only, which is
+   where a viewer looks for it. Null throughout today; see types/index.ts. */
+.tut-card__runtime {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(23, 23, 23, 0.82);
+  color: #ffffff;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 11px;
+}
+
+/* Roomy on purpose: 20px sides, 10px between lines. The card reads as calm
+   because nothing in it is closer than that. */
+.tut-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px 20px;
+  flex: 1 1 auto;
+}
+
+/* Whose work this is, first, the way a course card leads with the provider.
+   Quiet — it is a credit, not a selling point — but never absent. */
+.tut-card__source {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  min-width: 0;
+  color: var(--slate);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* The publisher's favicon, in a white circle with a hairline so a mark on
+   a transparent ground still reads as a badge. The avatar is the fallback
+   for a publisher we have no mark for. */
+.tut-card__logo {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 26px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px var(--rule);
+  object-fit: contain;
+}
+
+.tut-card__avatar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tut-card__source-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Medium, not semibold. At 16px on a white card, 600 reads as shouting, and
+   the title is the only line the reader has to weigh against the others. */
+.tut-card__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* One real link per card, stretched over everything including the button.
+   Keyboard users get a single stop and a focus ring that outlines the card,
+   not the words. */
+.tut-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tut-card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.tut-card:focus-within {
+  box-shadow:
+    var(--card-shadow-hover),
+    0 0 0 2px var(--panel),
+    0 0 0 4px var(--ink);
+}
+
+.tut-card__title a:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* The publisher's summary, in their words. Two lines, then an ellipsis;
+   the full text is one click away on their page. */
+.tut-card__summary {
+  margin: -2px 0 0;
+  color: var(--slate);
+  font-size: 13px;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* A hairline and a clear step down from the summary, so the footer is its
+   own row and not a fourth line of text. */
+.tut-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+/* Two stacked lines, not one wrapping row: at three columns the card is
+   about 285px inside, and "Video · Beginner" plus a kit price plus the
+   button do not fit on one line without wrapping unevenly. */
+.tut-card__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  color: var(--slate);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.tut-card__fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.tut-card__fact svg {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.tut-card__sep {
+  margin: 0 3px;
+  color: var(--ash);
+}
+
+/* The kit figure takes tabular numerals; its unit and count step back. */
+.tut-card__fact--kit {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  color: var(--ink);
+}
+
+.tut-card__fact--kit .fig__unit,
+.tut-card__parts {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* No catalogue match. Deliberately not styled as a price: it is the absence
+   of one, and rendering "Rs 0" here would be a lie about a free kit. */
+.tut-card__fact--muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Outline button. It is drawn, not focusable: the title link covers it, but
+   a reader hovering a card wants somewhere to click. */
+.tut-card__cta {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tut-card:hover .tut-card__cta {
+  border-color: var(--ink);
+}
+
+.tut-card:active .tut-card__cta {
+  background: var(--panel);
+}
+
+/* EMPTY STATE
+   ===========
+   Says what happened and what the library actually covers, rather than
+   "no results". */
+.tut-empty {
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--ring);
+  padding: 32px 28px;
+  max-width: 56ch;
+}
+
+.tut-empty h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.tut-empty p {
+  margin: 0 0 14px;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tut-empty p:last-child {
+  margin-bottom: 0;
+}
+
+/* RESPONSIVE
+   ==========
+   The rail is the first thing to give up its column; the cards keep their
+   proportions all the way down. */
+@media (max-width: 1080px) {
+  .tut-body {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .tut-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+  }
+
+  .tut-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tut-rail {
+    position: static;
+    flex-flow: row wrap;
+    gap: 20px 32px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  /* Side by side the groups would otherwise size to their longest label, and
+     the counts would sit at four different distances from the text. */
+  .tut-rail__group {
+    min-width: 160px;
+  }
+
+  .tut-featured {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tut-featured__media {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tut-featured__media img {
+    height: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tut-shell {
+    padding: 0 18px;
+  }
+
+  .tut-hero__title {
+    font-size: 18px;
+  }
+
+  .tut-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tut-featured__actions {
+    flex-flow: row wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tut-card,
+  .tut-card__media img,
+  .tut-card__cta,
+  .tut-button,
+  .tut-clear,
+  .tut-search input {
+    transition: none;
+  }
+
+  .tut-card:hover,
+  .tut-card:hover .tut-card__media img {
+    transform: none;
+  }
+}
+
+/* The featured title links out like every card title does: we index these
+   tutorials and do not host them. */
+.tut-featured__title a {
+  color: inherit;
+  text-decoration: none;
+}

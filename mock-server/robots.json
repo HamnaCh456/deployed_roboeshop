@@ -1,0 +1,567 @@
+[
+  {
+    "id": "lego-mindstorms-ev3",
+    "name": "LEGO Mindstorms EV3",
+    "brand": "LEGO Education",
+    "category": "Educational kits",
+    "summary": "Classroom robotics kit with a graphical programming environment, widely used for first robotics courses.",
+    "ageMin": 10, "ageMax": 16, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Scratch", "Blockly", "Python"],
+    "os": ["Windows", "macOS", "Android", "iOS"], "ros": null,
+    "dof": 3, "sensors": ["Touch", "Colour", "Ultrasonic", "Gyro"], "batteryHours": 2, "weightKg": 1.6,
+    "tutorials": 12,
+    "sellers": [
+      {"name": "Robo.pk", "price": 89999, "verified": true},
+      {"name": "RoboticPK", "price": 92500, "verified": true},
+      {"name": "Daraz", "price": 87000, "verified": false}
+    ]
+  },
+  {
+    "id": "lego-spike-prime",
+    "name": "LEGO SPIKE Prime",
+    "brand": "LEGO Education",
+    "category": "Educational kits",
+    "summary": "Successor to EV3 with a colour hub and Python support, aimed at middle-school STEM programmes.",
+    "ageMin": 10, "ageMax": 15, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Scratch", "Python"],
+    "os": ["Windows", "macOS", "Android", "iOS"], "ros": null,
+    "dof": 3, "sensors": ["Colour", "Distance", "Force", "Gyro"], "batteryHours": 3, "weightKg": 1.4,
+    "tutorials": 18,
+    "sellers": [
+      {"name": "Robo.pk", "price": 104999, "verified": true},
+      {"name": "IndusRoboTix", "price": 109000, "verified": true}
+    ]
+  },
+  {
+    "id": "makeblock-mbot2",
+    "name": "Makeblock mBot2",
+    "brand": "Makeblock",
+    "category": "Educational kits",
+    "summary": "Wi-Fi enabled classroom rover built on the CyberPi controller, with Scratch and Python workflows.",
+    "ageMin": 8, "ageMax": 14, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Arduino"], "languages": ["Scratch", "Python"],
+    "os": ["Windows", "macOS", "Linux", "Android"], "ros": null,
+    "dof": 2, "sensors": ["Ultrasonic", "Line follower", "Gyro", "Light"], "batteryHours": 4, "weightKg": 0.9,
+    "tutorials": 22,
+    "sellers": [
+      {"name": "Robo.pk", "price": 42999, "verified": true},
+      {"name": "Daraz", "price": 39500, "verified": false}
+    ]
+  },
+  {
+    "id": "elegoo-smart-car-v4",
+    "name": "Elegoo Smart Robot Car V4",
+    "brand": "Elegoo",
+    "category": "Educational kits",
+    "summary": "Low-cost Arduino rover kit with camera module, a common first build for university lab exercises.",
+    "ageMin": 12, "ageMax": 99, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Arduino"], "languages": ["C++"],
+    "os": ["Windows", "macOS", "Linux"], "ros": null,
+    "dof": 2, "sensors": ["Ultrasonic", "Line follower", "Camera"], "batteryHours": 3, "weightKg": 0.7,
+    "tutorials": 15,
+    "sellers": [
+      {"name": "RoboticPK", "price": 18999, "verified": true},
+      {"name": "Daraz", "price": 16500, "verified": false},
+      {"name": "IndusRoboTix", "price": 19750, "verified": true}
+    ]
+  },
+  {
+    "id": "yahboom-raspbot-v2",
+    "name": "Yahboom Raspbot V2",
+    "brand": "Yahboom",
+    "category": "Educational kits",
+    "summary": "Raspberry Pi rover with a pan-tilt camera, used for introductory computer-vision projects.",
+    "ageMin": 14, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Raspberry Pi"], "languages": ["Python"],
+    "os": ["Linux"], "ros": null,
+    "dof": 4, "sensors": ["Camera", "Ultrasonic", "IMU", "Line follower"], "batteryHours": 3, "weightKg": 1.1,
+    "tutorials": 20,
+    "sellers": [
+      {"name": "Robo.pk", "price": 34999, "verified": true},
+      {"name": "IndusRoboTix", "price": 36500, "verified": true}
+    ]
+  },
+  {
+    "id": "microbit-maqueen",
+    "name": "micro:bit Maqueen Plus",
+    "brand": "DFRobot",
+    "category": "Educational kits",
+    "summary": "Palm-sized micro:bit rover for primary classrooms, block programming out of the box.",
+    "ageMin": 7, "ageMax": 12, "skill": "Beginner", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["micro:bit"], "languages": ["Blockly", "Python"],
+    "os": ["Windows", "macOS", "Linux", "Android", "iOS"], "ros": null,
+    "dof": 2, "sensors": ["Line follower", "Ultrasonic", "IR"], "batteryHours": 5, "weightKg": 0.3,
+    "tutorials": 14,
+    "sellers": [
+      {"name": "Robo.pk", "price": 14999, "verified": true},
+      {"name": "Daraz", "price": 13200, "verified": false}
+    ]
+  },
+  {
+    "id": "sphero-bolt",
+    "name": "Sphero BOLT",
+    "brand": "Sphero",
+    "category": "Educational kits",
+    "summary": "Programmable robot ball with an LED matrix, designed for classroom activities without assembly.",
+    "ageMin": 8, "ageMax": 14, "skill": "Beginner", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Proprietary"], "languages": ["Scratch", "JavaScript"],
+    "os": ["Windows", "Android", "iOS"], "ros": null,
+    "dof": 2, "sensors": ["IMU", "Light", "Motor encoder"], "batteryHours": 2, "weightKg": 0.2,
+    "tutorials": 16,
+    "sellers": [
+      {"name": "Robo.pk", "price": 47999, "verified": true}
+    ]
+  },
+  {
+    "id": "vex-iq-gen2",
+    "name": "VEX IQ Kit (2nd Gen)",
+    "brand": "VEX Robotics",
+    "category": "Educational kits",
+    "summary": "Competition-oriented snap-together kit used in school robotics leagues.",
+    "ageMin": 8, "ageMax": 14, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Blockly", "Python", "C++"],
+    "os": ["Windows", "macOS", "Android", "iOS"], "ros": null,
+    "dof": 4, "sensors": ["Distance", "Optical", "Touch", "Gyro"], "batteryHours": 4, "weightKg": 2.1,
+    "tutorials": 25,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 119000, "verified": true},
+      {"name": "RoboticPK", "price": 124500, "verified": true}
+    ]
+  },
+  {
+    "id": "ozobot-evo",
+    "name": "Ozobot Evo",
+    "brand": "Ozobot",
+    "category": "Educational kits",
+    "summary": "Pocket robot that reads colour codes drawn on paper, for early-years coding lessons.",
+    "ageMin": 6, "ageMax": 10, "skill": "Beginner", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Proprietary"], "languages": ["Blockly"],
+    "os": ["Windows", "Android", "iOS"], "ros": null,
+    "dof": 2, "sensors": ["Colour", "Proximity", "IR"], "batteryHours": 2, "weightKg": 0.1,
+    "tutorials": 10,
+    "sellers": [
+      {"name": "Robo.pk", "price": 26999, "verified": true},
+      {"name": "Daraz", "price": 24000, "verified": false}
+    ]
+  },
+  {
+    "id": "robotis-dream-ii",
+    "name": "Robotis Dream II",
+    "brand": "Robotis",
+    "category": "Educational kits",
+    "summary": "Modular servo kit that builds into multiple robot forms, bridging toy kits and real actuators.",
+    "ageMin": 9, "ageMax": 15, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Blockly", "C"],
+    "os": ["Windows"], "ros": null,
+    "dof": 6, "sensors": ["IR", "Touch", "Sound"], "batteryHours": 3, "weightKg": 1.0,
+    "tutorials": 11,
+    "sellers": [
+      {"name": "RoboticPK", "price": 58999, "verified": true}
+    ]
+  },
+  {
+    "id": "petoi-bittle",
+    "name": "Petoi Bittle",
+    "brand": "Petoi",
+    "category": "Mobile robots",
+    "summary": "Palm-sized quadruped with an Arduino-compatible board, popular for gait and locomotion projects.",
+    "ageMin": 14, "ageMax": 99, "skill": "Intermediate", "useCase": "Hobby", "assembly": "Kit",
+    "platforms": ["Arduino", "Raspberry Pi"], "languages": ["C++", "Python"],
+    "os": ["Windows", "macOS", "Linux"], "ros": null,
+    "dof": 8, "sensors": ["IMU", "Ultrasonic", "IR"], "batteryHours": 1, "weightKg": 0.3,
+    "tutorials": 19,
+    "sellers": [
+      {"name": "Robo.pk", "price": 79999, "verified": true},
+      {"name": "IndusRoboTix", "price": 83500, "verified": true}
+    ]
+  },
+  {
+    "id": "freenove-hexapod",
+    "name": "Freenove Hexapod Robot Kit",
+    "brand": "Freenove",
+    "category": "Mobile robots",
+    "summary": "Eighteen-servo walking robot kit for Raspberry Pi, used to teach inverse kinematics.",
+    "ageMin": 16, "ageMax": 99, "skill": "Advanced", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Raspberry Pi"], "languages": ["Python"],
+    "os": ["Linux"], "ros": null,
+    "dof": 18, "sensors": ["Camera", "Ultrasonic", "IMU"], "batteryHours": 2, "weightKg": 1.8,
+    "tutorials": 13,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 68999, "verified": true},
+      {"name": "Daraz", "price": 64000, "verified": false}
+    ]
+  },
+  {
+    "id": "turtlebot3-burger",
+    "name": "TurtleBot3 Burger",
+    "brand": "Robotis",
+    "category": "Mobile robots",
+    "summary": "The standard ROS teaching platform, with lidar and open navigation stacks.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Kit",
+    "platforms": ["Raspberry Pi", "ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 2, "sensors": ["Lidar", "IMU", "Encoders"], "batteryHours": 2, "weightKg": 1.0,
+    "tutorials": 31,
+    "sellers": [
+      {"name": "RoboticPK", "price": 189000, "verified": true},
+      {"name": "IndusRoboTix", "price": 196500, "verified": true}
+    ]
+  },
+  {
+    "id": "turtlebot3-waffle-pi",
+    "name": "TurtleBot3 Waffle Pi",
+    "brand": "Robotis",
+    "category": "Mobile robots",
+    "summary": "Larger TurtleBot variant with a camera, for SLAM and navigation coursework.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Kit",
+    "platforms": ["Raspberry Pi", "ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 2, "sensors": ["Lidar", "Camera", "IMU", "Encoders"], "batteryHours": 2, "weightKg": 1.8,
+    "tutorials": 28,
+    "sellers": [
+      {"name": "RoboticPK", "price": 268000, "verified": true}
+    ]
+  },
+  {
+    "id": "nvidia-jetbot",
+    "name": "NVIDIA JetBot (Jetson Nano)",
+    "brand": "NVIDIA",
+    "category": "Mobile robots",
+    "summary": "GPU-accelerated rover for deep-learning navigation and collision-avoidance projects.",
+    "ageMin": 16, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Kit",
+    "platforms": ["Jetson", "ROS 2"], "languages": ["Python"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 2, "sensors": ["Camera", "IMU", "Encoders"], "batteryHours": 2, "weightKg": 1.2,
+    "tutorials": 24,
+    "sellers": [
+      {"name": "Robo.pk", "price": 152000, "verified": true},
+      {"name": "IndusRoboTix", "price": 158900, "verified": true}
+    ]
+  },
+  {
+    "id": "husarion-rosbot-2r",
+    "name": "Husarion ROSbot 2R",
+    "brand": "Husarion",
+    "category": "Mobile robots",
+    "summary": "Ready-to-run ROS 2 research rover with lidar and depth camera, no assembly needed.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 4, "sensors": ["Lidar", "Depth camera", "IMU", "Encoders"], "batteryHours": 4, "weightKg": 2.8,
+    "tutorials": 17,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 845000, "verified": true}
+    ]
+  },
+  {
+    "id": "unitree-go2-air",
+    "name": "Unitree Go2 Air",
+    "brand": "Unitree",
+    "category": "Mobile robots",
+    "summary": "Quadruped platform with an open SDK, used for legged-locomotion and inspection research.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 12, "sensors": ["Depth camera", "IMU", "Foot force"], "batteryHours": 2, "weightKg": 15.0,
+    "tutorials": 9,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 1250000, "verified": true}
+    ]
+  },
+  {
+    "id": "dobot-magician",
+    "name": "Dobot Magician",
+    "brand": "Dobot",
+    "category": "Robotic arms",
+    "summary": "Desktop four-axis arm with swappable end effectors, common in school and lab demonstrations.",
+    "ageMin": 15, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Proprietary"], "languages": ["Blockly", "Python", "C++"],
+    "os": ["Windows", "Linux"], "ros": "ROS 1",
+    "dof": 4, "payloadKg": 0.5, "reachMm": 320, "sensors": ["Encoders", "Limit switches"], "weightKg": 3.4,
+    "tutorials": 21,
+    "sellers": [
+      {"name": "RoboticPK", "price": 425000, "verified": true},
+      {"name": "IndusRoboTix", "price": 439000, "verified": true}
+    ]
+  },
+  {
+    "id": "elephant-mycobot-280",
+    "name": "myCobot 280 Pi",
+    "brand": "Elephant Robotics",
+    "category": "Robotic arms",
+    "summary": "Compact six-axis collaborative arm on a Raspberry Pi, priced for teaching labs.",
+    "ageMin": 16, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Raspberry Pi", "ROS 2"], "languages": ["Python", "C++", "Blockly"],
+    "os": ["Linux", "Windows"], "ros": "ROS 2",
+    "dof": 6, "payloadKg": 0.25, "reachMm": 280, "sensors": ["Encoders"], "weightKg": 0.85,
+    "tutorials": 23,
+    "sellers": [
+      {"name": "Robo.pk", "price": 389000, "verified": true},
+      {"name": "RoboticPK", "price": 398500, "verified": true}
+    ]
+  },
+  {
+    "id": "uarm-swift-pro",
+    "name": "uArm Swift Pro",
+    "brand": "UFactory",
+    "category": "Robotic arms",
+    "summary": "Arduino-compatible desktop arm with repeatable positioning, used for pick-and-place exercises.",
+    "ageMin": 15, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Arduino", "ROS 1"], "languages": ["Python", "C++", "Blockly"],
+    "os": ["Windows", "macOS", "Linux"], "ros": "ROS 1",
+    "dof": 4, "payloadKg": 0.5, "reachMm": 320, "sensors": ["Encoders"], "weightKg": 3.2,
+    "tutorials": 14,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 342000, "verified": true}
+    ]
+  },
+  {
+    "id": "robotis-openmanipulator-x",
+    "name": "Robotis OpenManipulator-X",
+    "brand": "Robotis",
+    "category": "Robotic arms",
+    "summary": "Open-source five-axis arm built on Dynamixel servos, pairs directly with TurtleBot3.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Kit",
+    "platforms": ["ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 5, "payloadKg": 0.5, "reachMm": 380, "sensors": ["Encoders", "Torque"], "weightKg": 0.7,
+    "tutorials": 16,
+    "sellers": [
+      {"name": "RoboticPK", "price": 298000, "verified": true}
+    ]
+  },
+  {
+    "id": "dobot-mg400",
+    "name": "Dobot MG400",
+    "brand": "Dobot",
+    "category": "Robotic arms",
+    "summary": "Compact four-axis industrial desktop robot for light assembly and benchtop automation.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Industrial", "assembly": "Pre-built",
+    "platforms": ["Proprietary", "ROS 1"], "languages": ["Python", "C++"],
+    "os": ["Windows", "Linux"], "ros": "ROS 1",
+    "dof": 4, "payloadKg": 0.75, "reachMm": 440, "sensors": ["Encoders"], "weightKg": 8.0,
+    "tutorials": 8,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 1180000, "verified": true}
+    ]
+  },
+  {
+    "id": "universal-robots-ur3e",
+    "name": "Universal Robots UR3e",
+    "brand": "Universal Robots",
+    "category": "Robotic arms",
+    "summary": "Six-axis collaborative industrial arm with force sensing, for production cells and advanced labs.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Industrial", "assembly": "Pre-built",
+    "platforms": ["ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux", "Windows"], "ros": "ROS 2",
+    "dof": 6, "payloadKg": 3.0, "reachMm": 500, "sensors": ["Force/torque", "Encoders"], "weightKg": 11.2,
+    "tutorials": 12,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 7450000, "verified": true}
+    ]
+  },
+  {
+    "id": "dji-tello-edu",
+    "name": "DJI Tello EDU",
+    "brand": "DJI / Ryze",
+    "category": "Drones",
+    "summary": "Programmable micro-drone with a Python SDK and swarm mode, safe for indoor classrooms.",
+    "ageMin": 12, "ageMax": 99, "skill": "Beginner", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Proprietary"], "languages": ["Python", "Scratch"],
+    "os": ["Windows", "macOS", "Android", "iOS"], "ros": null,
+    "dof": 4, "sensors": ["Camera", "IMU", "Barometer", "ToF"], "batteryHours": 1, "weightKg": 0.09,
+    "tutorials": 20,
+    "sellers": [
+      {"name": "Robo.pk", "price": 62999, "verified": true},
+      {"name": "Daraz", "price": 58500, "verified": false}
+    ]
+  },
+  {
+    "id": "bitcraze-crazyflie-21",
+    "name": "Bitcraze Crazyflie 2.1",
+    "brand": "Bitcraze",
+    "category": "Drones",
+    "summary": "Open-source 27g research quadrotor with ROS integration, for swarm and control experiments.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Kit",
+    "platforms": ["ROS 2"], "languages": ["Python", "C"],
+    "os": ["Linux", "Windows", "macOS"], "ros": "ROS 2",
+    "dof": 4, "sensors": ["IMU", "Barometer", "Optical flow"], "batteryHours": 1, "weightKg": 0.03,
+    "tutorials": 15,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 94500, "verified": true}
+    ]
+  },
+  {
+    "id": "dji-robomaster-s1",
+    "name": "DJI RoboMaster S1",
+    "brand": "DJI",
+    "category": "Mobile robots",
+    "summary": "Omnidirectional competition rover with vision modules and a Scratch-to-Python path.",
+    "ageMin": 14, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Scratch", "Python"],
+    "os": ["Windows", "Android", "iOS"], "ros": null,
+    "dof": 6, "sensors": ["Camera", "IMU", "IR", "Hit detectors"], "batteryHours": 1, "weightKg": 3.3,
+    "tutorials": 26,
+    "sellers": [
+      {"name": "Robo.pk", "price": 198000, "verified": true},
+      {"name": "RoboticPK", "price": 205000, "verified": true}
+    ]
+  },
+  {
+    "id": "ubtech-jimu-astrobot",
+    "name": "UBTECH Jimu AstroBot",
+    "brand": "UBTECH",
+    "category": "Humanoid",
+    "summary": "Servo-based buildable humanoid kit with app-driven block coding for home and classroom.",
+    "ageMin": 8, "ageMax": 14, "skill": "Beginner", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Proprietary"], "languages": ["Blockly"],
+    "os": ["Android", "iOS"], "ros": null,
+    "dof": 5, "sensors": ["IR", "Touch"], "batteryHours": 2, "weightKg": 1.2,
+    "tutorials": 9,
+    "sellers": [
+      {"name": "Robo.pk", "price": 54999, "verified": true},
+      {"name": "Daraz", "price": 51000, "verified": false}
+    ]
+  },
+  {
+    "id": "ubtech-alpha-1s",
+    "name": "UBTECH Alpha 1S",
+    "brand": "UBTECH",
+    "category": "Humanoid",
+    "summary": "Sixteen-servo desktop humanoid used for motion-sequencing and choreography projects.",
+    "ageMin": 12, "ageMax": 99, "skill": "Intermediate", "useCase": "Education", "assembly": "Pre-built",
+    "platforms": ["Proprietary"], "languages": ["Blockly"],
+    "os": ["Windows", "Android", "iOS"], "ros": null,
+    "dof": 16, "sensors": ["IMU", "Servo feedback"], "batteryHours": 2, "weightKg": 1.7,
+    "tutorials": 11,
+    "sellers": [
+      {"name": "RoboticPK", "price": 138000, "verified": true}
+    ]
+  },
+  {
+    "id": "robotis-op3",
+    "name": "Robotis OP3",
+    "brand": "Robotis",
+    "category": "Humanoid",
+    "summary": "Twenty-DOF open-platform research humanoid running ROS, used in RoboCup leagues.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "dof": 20, "sensors": ["Camera", "IMU", "Encoders"], "batteryHours": 1, "weightKg": 3.5,
+    "tutorials": 13,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 2380000, "verified": true}
+    ]
+  },
+  {
+    "id": "hiwonder-tonybot",
+    "name": "Hiwonder TonyPi",
+    "brand": "Hiwonder",
+    "category": "Humanoid",
+    "summary": "Raspberry Pi humanoid with vision-based gait control, a budget alternative for labs.",
+    "ageMin": 16, "ageMax": 99, "skill": "Advanced", "useCase": "Education", "assembly": "Kit",
+    "platforms": ["Raspberry Pi"], "languages": ["Python"],
+    "os": ["Linux"], "ros": "ROS 1",
+    "dof": 17, "sensors": ["Camera", "IMU"], "batteryHours": 2, "weightKg": 2.4,
+    "tutorials": 18,
+    "sellers": [
+      {"name": "Robo.pk", "price": 268000, "verified": true},
+      {"name": "IndusRoboTix", "price": 279500, "verified": true}
+    ]
+  },
+  {
+    "id": "arduino-uno-r4",
+    "name": "Arduino Uno R4 WiFi",
+    "brand": "Arduino",
+    "category": "Parts & sensors",
+    "summary": "The standard entry microcontroller board, the starting point for most custom robot builds.",
+    "ageMin": 12, "ageMax": 99, "skill": "Beginner", "useCase": "Hobby", "assembly": "Pre-built",
+    "platforms": ["Arduino"], "languages": ["C++"],
+    "os": ["Windows", "macOS", "Linux"], "ros": null,
+    "sensors": ["Onboard IMU"], "weightKg": 0.03,
+    "tutorials": 40,
+    "sellers": [
+      {"name": "Robo.pk", "price": 8999, "verified": true},
+      {"name": "Daraz", "price": 7800, "verified": false},
+      {"name": "RoboticPK", "price": 9250, "verified": true}
+    ]
+  },
+  {
+    "id": "raspberry-pi-5-8gb",
+    "name": "Raspberry Pi 5 (8 GB)",
+    "brand": "Raspberry Pi",
+    "category": "Parts & sensors",
+    "summary": "Single-board computer that runs ROS 2, the usual brain for intermediate robot builds.",
+    "ageMin": 14, "ageMax": 99, "skill": "Intermediate", "useCase": "Hobby", "assembly": "Pre-built",
+    "platforms": ["Raspberry Pi", "ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "weightKg": 0.05,
+    "tutorials": 35,
+    "sellers": [
+      {"name": "Robo.pk", "price": 32999, "verified": true},
+      {"name": "IndusRoboTix", "price": 34500, "verified": true}
+    ]
+  },
+  {
+    "id": "rplidar-a1m8",
+    "name": "Slamtec RPLIDAR A1M8",
+    "brand": "Slamtec",
+    "category": "Parts & sensors",
+    "summary": "360-degree laser scanner with ROS drivers, the standard first lidar for SLAM projects.",
+    "ageMin": 16, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["ROS 2", "Raspberry Pi"], "languages": ["Python", "C++"],
+    "os": ["Linux", "Windows"], "ros": "ROS 2",
+    "sensors": ["Lidar"], "weightKg": 0.19,
+    "tutorials": 12,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 62500, "verified": true},
+      {"name": "RoboticPK", "price": 65000, "verified": true}
+    ]
+  },
+  {
+    "id": "dynamixel-ax-12a",
+    "name": "Dynamixel AX-12A Servo",
+    "brand": "Robotis",
+    "category": "Parts & sensors",
+    "summary": "Daisy-chainable smart servo with position and load feedback, used across research arms.",
+    "ageMin": 16, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["Arduino", "ROS 2"], "languages": ["C++", "Python"],
+    "os": ["Windows", "Linux"], "ros": "ROS 2",
+    "sensors": ["Position", "Temperature", "Load"], "weightKg": 0.06,
+    "tutorials": 7,
+    "sellers": [
+      {"name": "RoboticPK", "price": 18500, "verified": true}
+    ]
+  },
+  {
+    "id": "intel-realsense-d435i",
+    "name": "Intel RealSense D435i",
+    "brand": "Intel",
+    "category": "Parts & sensors",
+    "summary": "Depth camera with built-in IMU, the common choice for 3D perception on mobile robots.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["ROS 2", "Jetson"], "languages": ["Python", "C++"],
+    "os": ["Linux", "Windows"], "ros": "ROS 2",
+    "sensors": ["Depth camera", "RGB", "IMU"], "weightKg": 0.07,
+    "tutorials": 14,
+    "sellers": [
+      {"name": "IndusRoboTix", "price": 128000, "verified": true}
+    ]
+  },
+  {
+    "id": "nvidia-jetson-orin-nano",
+    "name": "NVIDIA Jetson Orin Nano",
+    "brand": "NVIDIA",
+    "category": "Parts & sensors",
+    "summary": "Edge AI compute module for running vision models onboard a robot in real time.",
+    "ageMin": 18, "ageMax": 99, "skill": "Advanced", "useCase": "Research", "assembly": "Pre-built",
+    "platforms": ["Jetson", "ROS 2"], "languages": ["Python", "C++"],
+    "os": ["Linux"], "ros": "ROS 2",
+    "weightKg": 0.18,
+    "tutorials": 22,
+    "sellers": [
+      {"name": "Robo.pk", "price": 178000, "verified": true},
+      {"name": "IndusRoboTix", "price": 185500, "verified": true}
+    ]
+  }
+]

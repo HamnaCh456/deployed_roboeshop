@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RobotEshop Architecture Review</title>
+<style>
+  /* ---- tokens: light is the base, complete palette ---- */
+  :root {
+    --ground:    #F5F4F1;
+    --surface:   #EBE9E4;
+    --surface-2: #E1DED7;
+    --ink:       #191C1F;
+    --slate:     #4C545B;
+    --slate-dim: #767D84;
+    --rule:      #D3CFC7;
+    --copper:    #A2591F;
+    --copper-dim:#8A4C1A;
+    --keep:      #2C6349;
+    --drop:      #9B3226;
+    --paper:     #EFEDE8;
+    --code-bg:   #E4E1DA;
+    --shadow:    0 1px 0 rgba(25,28,31,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:    #131518;
+      --surface:   #1A1D21;
+      --surface-2: #22262B;
+      --ink:       #E9E6E0;
+      --slate:     #A7ADB4;
+      --slate-dim: #7B838B;
+      --rule:      #2C3137;
+      --copper:    #D08A4C;
+      --copper-dim:#B4713A;
+      --keep:      #6BA98A;
+      --drop:      #D6796B;
+      --paper:     #EFEDE8;
+      --code-bg:   #20242A;
+      --shadow:    0 1px 0 rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:    #131518;
+    --surface:   #1A1D21;
+    --surface-2: #22262B;
+    --ink:       #E9E6E0;
+    --slate:     #A7ADB4;
+    --slate-dim: #7B838B;
+    --rule:      #2C3137;
+    --copper:    #D08A4C;
+    --copper-dim:#B4713A;
+    --keep:      #6BA98A;
+    --drop:      #D6796B;
+    --paper:     #EFEDE8;
+    --code-bg:   #20242A;
+    --shadow:    0 1px 0 rgba(0,0,0,.4);
+  }
+
+  /* ---- type roles ---- */
+  :root {
+    --mono: "Cascadia Mono", "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+    --serif: "Iowan Old Style", "Charter", Charter, Georgia, "Times New Roman", serif;
+    --sans: ui-sans-serif, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--slate);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  @media (min-width: 1040px) {
+    .shell {
+      grid-template-columns: 216px minmax(0, 1fr);
+      gap: 56px;
+      padding: 0 40px 120px;
+    }
+  }
+
+  /* ---- masthead ---- */
+  .masthead {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--rule);
+    padding: 56px 0 28px;
+    margin-bottom: 44px;
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: clamp(28px, 4.4vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    margin: 0 0 20px;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+  .standfirst {
+    font-size: 19px;
+    color: var(--slate);
+    margin: 0;
+    max-width: 62ch;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--slate-dim);
+  }
+  .meta b { color: var(--slate); font-weight: 500; }
+  .meta a { color: var(--copper); text-decoration: none; border-bottom: 1px solid var(--copper-dim); }
+
+  /* ---- side spine ---- */
+  .spine { display: none; }
+  @media (min-width: 1040px) {
+    .spine {
+      display: block;
+      position: sticky;
+      top: 32px;
+      align-self: start;
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .spine h2 {
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--slate-dim);
+      margin: 0 0 14px;
+      font-weight: 500;
+    }
+    .spine ol { list-style: none; margin: 0 0 26px; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+    .spine a { color: var(--slate); text-decoration: none; display: flex; gap: 9px; }
+    .spine a:hover { color: var(--copper); }
+    .spine .n { color: var(--copper); flex: 0 0 22px; }
+    .spine .part { color: var(--ink); font-weight: 600; letter-spacing: .04em; }
+  }
+
+  main { grid-column: 1 / -1; min-width: 0; }
+  @media (min-width: 1040px) { main { grid-column: 2; } }
+
+  /* ---- sections ---- */
+  .part-rule {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 72px 0 8px;
+    padding-top: 22px;
+    border-top: 2px solid var(--ink);
+  }
+  .part-rule .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+  .part-rule h2 {
+    font-family: var(--mono);
+    font-size: clamp(20px, 3vw, 27px);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .part-rule + p { margin-top: 14px; }
+
+  section { margin-top: 52px; scroll-margin-top: 24px; }
+  section > h3 {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -.005em;
+    margin: 0 0 16px;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    text-wrap: balance;
+  }
+  section > h3 .n {
+    color: var(--copper);
+    font-size: 13px;
+    flex: 0 0 auto;
+    letter-spacing: .04em;
+  }
+  h4 {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 34px 0 12px;
+  }
+
+  p { margin: 0 0 18px; max-width: 68ch; }
+  ul, ol { margin: 0 0 20px; padding-left: 22px; max-width: 68ch; }
+  li { margin-bottom: 9px; }
+  li::marker { color: var(--copper); }
+  strong { color: var(--ink); font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--copper); }
+
+  code {
+    font-family: var(--mono);
+    font-size: .84em;
+    background: var(--code-bg);
+    padding: .12em .38em;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--copper);
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 0 0 22px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  blockquote {
+    margin: 0 0 22px;
+    padding: 4px 0 4px 20px;
+    border-left: 2px solid var(--copper);
+    color: var(--slate);
+    font-style: italic;
+    max-width: 66ch;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  /* ---- tables ---- */
+  .tw { overflow-x: auto; margin: 0 0 26px; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+  th, td { text-align: left; padding: 11px 14px; vertical-align: top; border-bottom: 1px solid var(--rule); }
+  th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--slate-dim);
+    font-weight: 500;
+    white-space: nowrap;
+    background: var(--surface-2);
+  }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--ink); }
+  td code { font-size: 12px; }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .pill.keep { color: var(--keep); }
+  .pill.drop { color: var(--drop); }
+  .pill.hold { color: var(--copper); }
+
+  /* ---- diagrams on paper ---- */
+  .figure {
+    margin: 0 0 28px;
+    border: 1px solid var(--rule);
+  }
+  .figure .plate {
+    background: var(--paper);
+    padding: 22px 16px;
+    overflow-x: auto;
+  }
+  .figure .caption {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--slate-dim);
+    padding: 10px 14px;
+    border-top: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .figure .plate pre.ascii {
+    display: block; background: none; border: none; padding: 0; margin: 0;
+    color: #22262B; font-size: 12.5px; line-height: 1.35; white-space: pre;
+  }
+  pre.mermaid { background: none; border: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+
+  /* ---- callout ---- */
+  .callout {
+    border: 1px solid var(--rule);
+    border-top: 2px solid var(--copper);
+    background: var(--surface);
+    padding: 22px 24px;
+    margin: 0 0 26px;
+    box-shadow: var(--shadow);
+  }
+  .callout .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin: 0 0 12px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .verdict {
+    border: 1px solid var(--ink);
+    background: var(--surface);
+    padding: 30px 32px;
+    margin-top: 60px;
+  }
+  .verdict .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin: 0 0 16px;
+  }
+  .verdict p { font-size: 18px; }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  footer {
+    grid-column: 1 / -1;
+    margin-top: 72px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--slate-dim);
+  }
+
+  a:focus-visible, .spine a:focus-visible {
+    outline: 2px solid var(--copper);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="kicker">FYDP BSEF23-02 · Architecture review</p>
+    <h1>How the blueprint's agents work, and what we should copy</h1>
+    <p class="standfirst">A read of the NVIDIA Retail Shopping Assistant source — five agents, one routing graph — followed by a recommendation on which parts of it RobotEshop should actually build.</p>
+    <div class="meta">
+      <span><b>Subject</b> <a href="https://github.com/NVIDIA-AI-Blueprints/retail-shopping-assistant">NVIDIA-AI-Blueprints/retail-shopping-assistant</a></span>
+      <span><b>Date</b> 15 Aug 2026</span>
+      <span><b>Reads with</b> the FYDP proposal, <code>scraper/README.md</code></span>
+    </div>
+  </header>
+
+  <nav class="spine" aria-label="Contents">
+    <h2>Part A · the blueprint</h2>
+    <ol>
+      <li><a href="#a1"><span class="n">A1</span><span>Six containers</span></a></li>
+      <li><a href="#a2"><span class="n">A2</span><span>The five agents</span></a></li>
+      <li><a href="#a3"><span class="n">A3</span><span>The State object</span></a></li>
+      <li><a href="#a4"><span class="n">A4</span><span>The graph</span></a></li>
+      <li><a href="#a5"><span class="n">A5</span><span>Agent by agent</span></a></li>
+      <li><a href="#a6"><span class="n">A6</span><span>Cost per query</span></a></li>
+    </ol>
+    <h2>Part B · the review</h2>
+    <ol>
+      <li><a href="#b1"><span class="n">B1</span><span>Short answer</span></a></li>
+      <li><a href="#b2"><span class="n">B2</span><span>What we have</span></a></li>
+      <li><a href="#b3"><span class="n">B3</span><span>What to drop</span></a></li>
+      <li><a href="#b4"><span class="n">B4</span><span>What to keep</span></a></li>
+      <li><a href="#b5"><span class="n">B5</span><span>Where robots differ</span></a></li>
+      <li><a href="#b6"><span class="n">B6</span><span>Proposed design</span></a></li>
+      <li><a href="#b7"><span class="n">B7</span><span>Sequencing</span></a></li>
+      <li><a href="#b8"><span class="n">B8</span><span>Open questions</span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <div class="callout">
+      <p class="label">First, the word "agent"</p>
+      <p>The proposal uses it in two unrelated senses, and mixing them up will cost marks in the defence.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Sense</th><th>Where</th><th>What it really is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Scraping agent</strong></td><td>Proposal §5 — <em>"automated web scraping agents … such as Scrapy"</em></td><td>A crawler. No AI. Deterministic CSS and regex extraction. <strong>Already built</strong> — <code>scraper/</code></td></tr>
+            <tr><td><strong>LLM agent</strong></td><td>Proposal §10 — <em>"a dedicated AI chatbot"</em></td><td>An LLM given a role, a prompt and tools, wired into a graph. <strong>This is what the NVIDIA repo is</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Everything in Part A is about the second sense.</p>
+    </div>
+
+    <div class="part-rule">
+      <span class="tag">Part A</span>
+      <h2>How the blueprint works</h2>
+    </div>
+    <p>Read from the source rather than from its README.</p>
+
+    <section id="a1">
+      <h3><span class="n">A1</span> It is not one program; it is six containers</h3>
+      <p><code>docker-compose.yaml</code> brings up seven services. The agents live in exactly one of them.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Service</th><th>Port</th><th>Role</th><th>Size</th></tr></thead>
+          <tbody>
+            <tr><td><strong>chain-server</strong></td><td class="num">8009</td><td><strong>All five agents, plus the graph that routes between them</strong></td><td class="num">~2,100 LOC</td></tr>
+            <tr><td>catalog-retriever</td><td class="num">8010</td><td>Embeds the product CSV into Milvus, answers similarity queries</td><td class="num">~1,150 LOC</td></tr>
+            <tr><td>memory-retriever</td><td class="num">8011</td><td>SQLite store of per-user conversation context and cart</td><td class="num">~225 LOC</td></tr>
+            <tr><td>rails</td><td class="num">8012</td><td>NeMo Guardrails — input and output safety filter</td><td class="num">~150 LOC</td></tr>
+            <tr><td>milvus + etcd + minio</td><td class="num">19530</td><td>Vector database and its two dependencies</td><td>third-party</td></tr>
+            <tr><td>frontend</td><td>—</td><td>React UI — the one already copied into <code>ui/</code></td><td>—</td></tr>
+            <tr><td>nginx</td><td class="num">3000</td><td>Reverse proxy</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The line to notice in their README is the hardware requirement:</p>
+      <blockquote><p>Hardware: 4x H100 GPUs (preferred) or 4x A100 GPUs (minimum) for local deployment</p></blockquote>
+      <p>That is because the blueprint runs three NVIDIA NIM models locally: a <strong>120-billion-parameter</strong> LLM (<code>nvidia/nemotron-3-super-120b-a12b</code>), a text embedding model (<code>nv-embedqa-e5-v5</code>), and an image embedding model (<code>nvclip</code>). Four H100s is roughly <strong>US$100,000+</strong> of hardware, or about <strong>$12–15/hour</strong> rented. A <code>config-build.yaml</code> override points at NVIDIA's hosted API instead — that path needs no GPU, and it is the only one relevant to us.</p>
+    </section>
+
+    <section id="a2">
+      <h3><span class="n">A2</span> The five agents</h3>
+      <p>All five live in <code>chain_server/src/</code>. Each is a small Python class with an <code>invoke(state)</code> method. There is no autonomous agent loop anywhere — no agent decides to call another agent. <strong>A fixed graph decides.</strong></p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>File</th><th>Class</th><th>LLM?</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>planner.py</code></td><td>PlannerAgent</td><td>1 call</td><td>Reads the query, outputs one word: <code>cart</code>, <code>retriever</code>, or <code>chatter</code></td></tr>
+            <tr><td><code>retriever.py</code></td><td>RetrieverAgent</td><td>1 call</td><td>Turns "dresses under $100" into <code>{entities, categories, filters}</code>, then calls the catalog service</td></tr>
+            <tr><td><code>cart.py</code></td><td>CartAgent</td><td>1 call</td><td>Tool-calls add / remove / view / total; resolves fuzzy names to real catalog rows</td></tr>
+            <tr><td><code>chatter.py</code></td><td>ChatterAgent</td><td>1 streaming</td><td><strong>Writes the answer the user sees.</strong> Always runs, always last</td></tr>
+            <tr><td><code>summarizer.py</code></td><td>SummaryAgent</td><td>sometimes</td><td>Compresses the conversation past 16,384 chars, then persists it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>So a single user message costs <strong>two to three LLM calls</strong>, not one.</p>
+    </section>
+
+    <section id="a3">
+      <h3><span class="n">A3</span> The State object — what flows between agents</h3>
+      <p>Everything is one Pydantic model, in <code>chain_server/src/agenttypes.py</code>:</p>
+<pre><code>class State(BaseModel):
+    user_id: int
+    query: str                   # what the user typed
+    context: str                 # summarised history of the conversation
+    cart: Cart                   # authoritative cart contents
+    response: str                # written by whichever specialist ran
+    image: str                   # base64, if a photo was uploaded
+    retrieved: Dict[str, str]    # {product_name: image_url} — this turn only
+    next_agent: str              # set by the planner
+    guardrails: bool
+    timings: Dict[str, float]    # every step is timed</code></pre>
+      <p>Two fields carry most of the design weight. <strong><code>retrieved</code></strong> is wiped and refilled every turn — it is the allowlist of products the final responder may name, and it is how they stop the model inventing stock. <strong><code>context</code></strong> is a summary, not a transcript, and it is explicitly labelled "not authoritative" when handed on.</p>
+    </section>
+
+    <section id="a4">
+      <h3><span class="n">A4</span> The graph</h3>
+      <p><code>chain_server/src/graph.py</code> builds a LangGraph state machine. This is the whole architecture in one picture.</p>
+      <div class="figure">
+        <div class="plate">
+<pre class="ascii">
+   user message
+        |
+        v
+   memory_node ................. fetch context + cart
+        |
+        +---------------+
+        v               v
+   planner_node    rails_input_node ..... safety check, runs in
+   LLM: which      (parallel)             parallel so it costs
+   specialist?          |                 no wall-clock time
+        |               |
+   +----+-----+-----+   |
+   v          v     v   |
+  cart   retriever  pass|  ............. exactly ONE of these runs
+   |          |     |   |
+   +----------+-----+---+
+        |
+        v
+   check_rail_node ----- unsafe -----> canned refusal --+
+        |                                               |
+       safe                                             |
+        v                                               |
+   chatter_node ................ LLM, streams tokens.   |
+        |                        The only agent that    |
+        v                        talks to the user.     |
+   rails_output_node                                    |
+        |                                               |
+        v                                               |
+   check_out_node ------ unsafe -----> canned refusal --+
+        |                                               |
+       safe                                             |
+        v                                               |
+   summarize_node .............. compress + persist     |
+        |                                               |
+        v                                               v
+       done  &lt;----------------------------------------- +
+</pre>
+        </div>
+        <div class="caption">Fig. 1 — the LangGraph topology, as built in graph.py</div>
+      </div>
+      <p>Three things in that diagram are worth stealing outright:</p>
+      <ol>
+        <li><strong>The planner and the safety check run in parallel.</strong> <code>memory_node</code> fans out to both, and the graph joins them at <code>check_rail_node</code>. The safety check is therefore free in wall-clock terms.</li>
+        <li><strong>Exactly one specialist runs per turn.</strong> It is a router, not a debate between agents.</li>
+        <li><strong>The chatter always runs last, and is the only agent that talks to the user.</strong> Specialists produce data; the chatter produces prose.</li>
+      </ol>
+    </section>
+
+    <section id="a5">
+      <h3><span class="n">A5</span> Agent by agent</h3>
+
+      <h4>The Planner — a one-word classifier</h4>
+      <p>It sends the query plus a ~50-line routing prompt at <code>temperature=0.0, max_tokens=100</code> and expects a single token back. Everything around that call is defensive:</p>
+<pre><code>mappings = {"search": "retriever", "cart_node": "cart",
+            "product_finder": "retriever", "general": "chatter", ...}
+normalized = mappings.get(agent_name, agent_name)
+if normalized not in self.agent_choices:
+    logger.warning(f"Invalid agent choice '{normalized}', defaulting to 'chatter'")
+    return "chatter"</code></pre>
+      <p>If the model returns garbage, or the call throws, it falls back to <code>chatter</code>. <strong>The system degrades to a plain chatbot rather than crashing.</strong> The planner is also given the query <em>without</em> conversation context — their comment says this is "to avoid routing bias."</p>
+      <p>The routing prompt encodes one genuinely subtle distinction, and our domain has the same problem:</p>
+      <ul>
+        <li><em>"show me dresses under $100"</em> → <code>search</code> — there is a product type</li>
+        <li><em>"show me anything under $100"</em> → <code>chatter</code> — constraint only, so <strong>ask a clarifying question instead of guessing</strong></li>
+      </ul>
+
+      <h4>The Retriever — natural language into a structured query</h4>
+      <p>The most instructive file in the repo. It does <strong>not</strong> throw the user's sentence at a vector database. It first runs an LLM extraction step with a forced tool schema, producing:</p>
+<pre><code>{ "search_entities": ["earrings"], "category_one": "earrings",
+  "min_price": null, "max_price": 200 }</code></pre>
+      <p>The prompt for that step is ~90 lines of ordered decision logic — attribute follow-up, then new product type, then open-ended browse — with worked examples for each. Then the <em>code</em>, not the model, cleans up after it:</p>
+      <ul>
+        <li><code>_sanitize_categories()</code> drops any category the model invented that is not in the configured allowlist.</li>
+        <li><code>_normalize_filters()</code> throws away <code>max_price: 0</code>, because in their own comment <em>"LLMs frequently fill optional price parameters with 0 when the user did not mention a budget"</em> — and a zero maximum silently returns nothing.</li>
+        <li>Blank entities are stripped, because the embedding endpoint 400s on empty input.</li>
+      </ul>
+      <div class="callout">
+        <p class="label">The one lesson to take from this repo</p>
+        <p>Let the LLM <em>propose</em> a structured query, then validate it in ordinary code before it touches the database. Every hard-won fix in this file is a guard against a plausible-looking value the model made up.</p>
+      </div>
+      <p>The catalog service then does the search: embed the text, cosine-search Milvus, keep the top-k above a 0.5 similarity threshold, apply price filters to that window, then filter by category. With an image attached it searches text and image collections concurrently and merges by score, and <strong>skips category filtering entirely</strong> — image similarity is trusted as the better signal.</p>
+
+      <h4>The Cart agent — where the real engineering is</h4>
+      <p>At 807 lines it is the biggest file, and almost none of that is prompting. The problem it solves: the user says <em>"add the second one"</em>, and the cart needs an exact catalog row.</p>
+      <ul>
+        <li>Six tool schemas — add, bulk add, remove, bulk remove, view, total.</li>
+        <li><code>_resolve_catalog_match()</code> is a four-stage name resolver: exact normalised match, then substring containment, then Jaccard token overlap, and only then the top embedding hit if it clears 0.5. Their comment explains why embeddings alone fail: <em>"distinctive product names are systematically underrated by similarity against full descriptions."</em></li>
+        <li>Prices are pulled out with a regex and cached per cart line, so <strong>totals are summed in Python, never by the LLM</strong> — <em>"LLMs are unreliable for arithmetic."</em></li>
+        <li>Pronouns — <code>it</code>, <code>this</code>, <code>both</code>, <code>those</code> — are matched by regex against the last products shown, not sent to the model.</li>
+      </ul>
+
+      <h4>The Chatter — the grounding layer</h4>
+      <p>It never sees raw state. It is handed a hand-built, labelled block:</p>
+<pre><code>USER QUERY: ...
+PRECEDING AGENT (ran this turn before you): cart | retriever | none
+PRECEDING AGENT RESULT (verbatim, authoritative for this turn): ...
+CURRENT CART (authoritative): - 1 x Midnight Velvet Blazer @ $89.00
+AVAILABLE CATALOG (fresh this turn; the only NEW products you may name): ...
+RECENT DISCUSSION (reference only; NOT authoritative for cart state): ...</code></pre>
+      <p>Every field is ranked by trustworthiness, and the system prompt enforces the ranking:</p>
+      <blockquote><p>NEVER SELF-EXECUTE CART ACTIONS. … You may only state that an item was added when PRECEDING AGENT is <code>cart</code> AND the result explicitly confirms it — even if RECENT DISCUSSION contains such phrases.</p></blockquote>
+      <p>That rule exists because a summarised history containing <em>"I've added the blazer to your cart"</em> will otherwise make the model claim it did so again. It is the classic multi-turn hallucination in shopping assistants, and the fix is structural: separate authoritative fields from reference fields, and say so in the prompt.</p>
+      <p>The chatter is the only streaming agent. It emits two message types over Server-Sent Events:</p>
+<pre><code>{"type": "images",  "payload": {"Product Name": "/images/x.jpg"}, "timestamp": …}
+{"type": "content", "payload": "token", "timestamp": …}
+data: [DONE]</code></pre>
+      <p><strong>That is precisely the protocol <code>mock-server/server.js</code> already reimplements</strong>, which is why the NVIDIA UI in <code>ui/</code> runs against our mock backend unmodified.</p>
+
+      <h4>The Summarizer — memory hygiene</h4>
+      <p>Only fires past 16,384 characters. Its prompt forbids dropping product facts — <em>"NEVER remove or shorten product specifications, even to save space"</em> — while allowing greetings and filler to be compressed. Note the ordering: summarise, <em>then</em> persist, so what is stored is what the next turn will see.</p>
+
+      <h4>Guardrails — the part that is nearly empty</h4>
+      <p>150 lines wrapping NeMo Guardrails. Input and output are each checked by asking a rails LLM to regenerate the message; if what comes back is byte-identical to what went in, it is judged safe. On any exception it <strong>defaults to safe</strong>. The refusal is a single canned string from config.</p>
+    </section>
+
+    <section id="a6">
+      <h3><span class="n">A6</span> What one query actually costs</h3>
+      <p>For <em>"show me dresses under $100"</em>:</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Step</th><th>Work</th></tr></thead>
+          <tbody>
+            <tr><td>memory_node</td><td>2 HTTP GETs — context, cart</td></tr>
+            <tr><td>rails_input_node</td><td>1 LLM call — <strong>in parallel</strong> with the planner</td></tr>
+            <tr><td>planner_node</td><td>1 LLM call → <code>retriever</code></td></tr>
+            <tr><td>retriever_node</td><td>1 LLM call (extraction) + 1 embedding call + 1 Milvus search</td></tr>
+            <tr><td>chatter_node</td><td>1 streaming LLM call</td></tr>
+            <tr><td>rails_output_node</td><td>1 LLM call</td></tr>
+            <tr><td>summarize_node</td><td>0 or 1 LLM call + 1 HTTP POST</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Five to seven model calls per user message.</strong> Every step is timed into <code>state.timings</code> and exposed at <code>/query/timing</code> — a detail worth copying, since our evaluation chapter will need latency numbers.</p>
+    </section>
+
+    <div class="part-rule">
+      <span class="tag">Part B</span>
+      <h2>The review</h2>
+    </div>
+    <p>Should RobotEshop build this?</p>
+
+    <section id="b1">
+      <h3><span class="n">B1</span> Short answer</h3>
+      <div class="callout">
+        <p class="label">Recommendation</p>
+        <p><strong>Copy the architecture. Do not copy the infrastructure.</strong></p>
+      </div>
+      <p>The five-agent shape — router, then specialist, then grounded responder, with memory and a validation layer — is sound, well-tested, and directly applicable to the proposal. It is also implementable in a semester by four students.</p>
+      <p>The stack underneath it — 4×H100 GPUs, three self-hosted NIM models, Milvus with etcd and MinIO, a NeMo Guardrails container — is not something to take on. It contradicts our own proposal, which specifies PostgreSQL, Django/FastAPI and React; it costs more than a student project can carry; and it is orthogonal to what we are graded on.</p>
+    </section>
+
+    <section id="b2">
+      <h3><span class="n">B2</span> What we already have</h3>
+      <p>We are further along than the proposal implies. Mapping our repo onto theirs:</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>NVIDIA component</th><th>Ours today</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Static apparel CSV</td><td><code>scraper/</code> — 144 robots from robo.pk, SQLite + JSON + CSV, price history</td><td><strong>Better than theirs.</strong> Theirs is a fixed file; ours is a live pipeline</td></tr>
+            <tr><td>catalog-retriever — Milvus + embeddings</td><td><code>mock-server/server.js</code> keyword and filter search</td><td>Placeholder — this is the real gap</td></tr>
+            <tr><td>chain-server — 5 LLM agents</td><td><code>mock-server/server.js</code> regex intent rules</td><td>Placeholder, <strong>but the shape is already right</strong></td></tr>
+            <tr><td>memory-retriever — SQLite context + cart</td><td>In-memory <code>Map</code></td><td>Needs to become PostgreSQL</td></tr>
+            <tr><td>rails</td><td>none</td><td>Prompt-level is sufficient for us</td></tr>
+            <tr><td>frontend</td><td><code>ui/</code> — the genuine NVIDIA React UI, already fixed for laptop screens</td><td>Done</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Worth saying plainly: <code>mock-server/server.js</code> is already a <strong>rule-based implementation of the same architecture</strong>. Look at what is in it — intent regexes for cart, compare, tutorials, explain and greeting; a filter parser; a scorer; a glossary; per-user carts. That is a planner, a retriever, a cart agent and a chatter, written without an LLM. The migration path is to replace those rules one at a time with model calls, not to start over.</p>
+    </section>
+
+    <section id="b3">
+      <h3><span class="n">B3</span> What to drop, and why</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Their component</th><th>Verdict</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>4×H100 + local NIMs</td><td><span class="pill drop">drop</span></td><td>~$100k of hardware, or $12–15/hr rented. Use a hosted LLM API</td></tr>
+            <tr><td>Milvus + etcd + MinIO</td><td><span class="pill drop">drop</span></td><td>Three containers to run one index. <code>pgvector</code> is one extension on the database the proposal already names</td></tr>
+            <tr><td>NVCLIP image search</td><td><span class="pill hold">defer</span></td><td>Photo-search for clothes is a real use case; "find a robot that looks like this" is not. Low value per unit of work</td></tr>
+            <tr><td>NeMo Guardrails container</td><td><span class="pill drop">drop</span></td><td>Doubles model calls per turn for a byte-comparison check. A refusal rule in the system prompt plus a topic check gets 90% of it</td></tr>
+            <tr><td>Cart and checkout as a first-class agent</td><td><span class="pill hold">reduce</span></td><td>We are an <strong>aggregator</strong>, not a shop — §9 says affiliate links and vendor partnerships. A saved comparison list matters more than a checkout cart</td></tr>
+            <tr><td>Their apparel taxonomy</td><td><span class="pill hold">replace</span></td><td><code>["bag", "sunglasses", "dress", …]</code> → our categories: educational kits, humanoids, arms, drones, mobile robots, parts</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="b4">
+      <h3><span class="n">B4</span> What to keep — the eight ideas that matter</h3>
+      <ol>
+        <li><strong>A cheap router in front of expensive specialists.</strong> One classification call is far cheaper than giving one mega-prompt every tool.</li>
+        <li><strong>Extract a structured query with the LLM, then validate it in code.</strong> This is what will keep our ROS-version and age-range filters honest.</li>
+        <li><strong>A per-turn allowlist of retrievable items.</strong> We need this more than they do — an invented spec ("yes, it supports ROS 2") on a Rs 500,000 purchase is a real harm, and the proposal's whole premise in §10 is that general chatbots get robot facts wrong.</li>
+        <li><strong>Label input fields by trustworthiness</strong> — authoritative versus reference. The cheapest hallucination fix in the repo.</li>
+        <li><strong>Never let the model do arithmetic.</strong> Totals, price comparisons, "cheapest of these three" — compute in SQL and hand over the answer.</li>
+        <li><strong>Fail soft, always.</strong> Every LLM call in their code has a fallback path. Our demo will run on university wifi in front of an FAC panel.</li>
+        <li><strong>Summarise memory rather than replaying it</strong>, and keep specifications intact when doing so.</li>
+        <li><strong>Time every stage into the response.</strong> We will need those numbers for the testing chapter in Month 7.</li>
+      </ol>
+    </section>
+
+    <section id="b5">
+      <h3><span class="n">B5</span> Where our domain differs — and needs more than they built</h3>
+      <p>This is the part to raise in the review, because it is where the project earns its own marks rather than reimplementing NVIDIA's.</p>
+      <div class="callout">
+        <p class="label">The core difference</p>
+        <p><strong>Apparel search is a similarity problem. Robot search is a constraint problem.</strong></p>
+      </div>
+      <p>"A summer dress" is fuzzy, and embeddings are exactly right for it. But our objectives are almost entirely hard constraints:</p>
+      <blockquote><p>age-based and skill-based recommendations … supported platforms and programming tools … the operating system supported … price comparison</p></blockquote>
+      <p>"Which robots support ROS 2, run on Raspberry Pi, suit a 12-year-old, and cost under Rs 50,000" is a <code>WHERE</code> clause, not a cosine distance. Embeddings will happily return a ROS 1 robot that <em>reads</em> similar. So our retriever should be <strong>hybrid</strong>: the LLM extracts a structured filter, SQL applies it exactly, and embeddings only rank what survives — or handle the genuinely vague part of a query, like "something for a school robotics club."</p>
+      <p>That inversion — <strong>SQL as the authority, vectors as the ranker</strong> — is the main architectural change I would make against their design, and it happens to fit the PostgreSQL choice already in the proposal.</p>
+      <p>Two agents they do not have, that our proposal explicitly promises:</p>
+      <ul>
+        <li><strong>A comparison agent</strong> (§4 "search, filter, and compare"; §9 "advanced comparison tools") — builds a spec-by-spec table across two to four robots. Must be deterministic; a hallucinated comparison table is worse than none.</li>
+        <li><strong>A tutorial and explainer agent</strong> (§10 on missing video tutorials, and the jargon problem in the abstract) — answers "what does 6-DOF mean?" from a curated glossary, and surfaces tutorials from the <code>tutorial_count</code> field the scraper already collects.</li>
+      </ul>
+      <p>Both already exist as rules in <code>mock-server/server.js</code>. They are the natural next two nodes on the graph.</p>
+      <p>One data-integrity problem they never face: their catalog is one CSV they own. <strong>Ours is scraped from third parties and goes stale.</strong> Verified-seller and price claims need a <code>last_scraped_at</code> timestamp surfaced in the UI, and the assistant should be told when data is old. The proposal sells trust — verified sellers, local availability — and stale prices undermine exactly that.</p>
+    </section>
+
+    <section id="b6">
+      <h3><span class="n">B6</span> Recommended architecture for RobotEshop</h3>
+      <div class="figure">
+        <div class="plate">
+<pre class="ascii">
+   user message
+        |
+        v
+   load context + saved list ............ PostgreSQL
+        |
+        v
+   Planner  (1 LLM call)
+        |
+   +----+--------+---------+---------+---------+
+   v             v         v         v         v
+ search       compare   explain    list      chat
+ LLM extracts SQL only  glossary   saved     (passthrough)
+ filters ->   no LLM    tutorials  items
+ code checks     |         |         |         |
+   |             |         |         |         |
+   v             v         |         |         |
+ +-------------------+     |         |         |
+ |   PostgreSQL      |     |         |         |
+ |   + pgvector      |     |         |         |
+ |   (scraper output)|     |         |         |
+ +---------+---------+     |         |         |
+           +---------------+---------+---------+
+                    |
+                    v
+   Responder -- streaming LLM
+   grounded only in this turn's results
+                    |
+                    v
+   summarise + persist
+                    |
+                    v
+   SSE  ---->  the existing React UI  (ui/)
+</pre>
+        </div>
+        <div class="caption">Fig. 2 — proposed topology, same shape, our stack</div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Orchestration</td><td>LangGraph (Python)</td><td>Same library as the blueprint; their graph code transfers almost directly</td></tr>
+            <tr><td>API</td><td>FastAPI</td><td>Already in the proposal. Keep the <code>/query/stream</code> SSE contract so <code>ui/</code> needs no changes</td></tr>
+            <tr><td>Database</td><td>PostgreSQL + <code>pgvector</code></td><td>Already in the proposal; replaces three containers with one extension</td></tr>
+            <tr><td>LLM</td><td>Hosted API</td><td>No GPU. Route the planner to a small model and the responder to a stronger one</td></tr>
+            <tr><td>Embeddings</td><td>Hosted embedding API, cached in Postgres</td><td>144 robots is a tiny index — embed once at ingest</td></tr>
+            <tr><td>Data source</td><td><code>scraper/</code> → Postgres, on a schedule</td><td>Already built; add a loader and a cron</td></tr>
+            <tr><td>Guardrails</td><td>System-prompt rules + off-topic branch in the planner</td><td>The planner already classifies; add a <code>reject</code> route</td></tr>
+            <tr><td>Frontend</td><td><code>ui/</code> unchanged</td><td>Already working</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="b7">
+      <h3><span class="n">B7</span> Sequencing against the Month 3–6 window</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Order</th><th>Deliverable</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Load <code>scraper/data/robots.json</code> into PostgreSQL</td><td>Schema first — everything depends on it</td></tr>
+            <tr><td class="num">2</td><td>FastAPI service speaking the same SSE protocol as the mock server</td><td>The UI keeps working throughout</td></tr>
+            <tr><td class="num">3</td><td>Planner + Responder only — two agents</td><td>End-to-end LLM path, the rest still rule-based. <strong>A demoable milestone</strong></td></tr>
+            <tr><td class="num">4</td><td>Search agent: LLM filter extraction → validated → SQL</td><td>The core of the project</td></tr>
+            <tr><td class="num">5</td><td><code>pgvector</code> ranking on top of SQL results</td><td>Handles vague queries</td></tr>
+            <tr><td class="num">6</td><td>Compare and Explain agents</td><td>Our differentiators — §9 and §10</td></tr>
+            <tr><td class="num">7</td><td>Saved list and affiliate hand-off</td><td>Replaces their cart</td></tr>
+            <tr><td class="num">8</td><td>Latency and accuracy evaluation</td><td>Month 7; use their timings pattern</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Steps 1–3 give a working AI assistant on real scraped data. Everything after that is improvement, not risk — the right shape for an FYDP timeline.</p>
+    </section>
+
+    <section id="b8">
+      <h3><span class="n">B8</span> Open questions for the team</h3>
+      <ol>
+        <li><strong>Cart or saved list?</strong> Aggregator with affiliate hand-off to Robo.pk, or actual checkout? This decides whether the cart agent is 800 lines or 80.</li>
+        <li><strong>How many sources at launch?</strong> <code>scraper/config.yaml</code> records that IndusRoboTix exposed only 4 products through its API, and <code>roboticspk.com</code> is a parked page. Robo.pk's 144 products may be most of the realistic catalog. That is a defensible scope — but we should say it before the panel asks.</li>
+        <li><strong>Which hosted LLM, and who pays?</strong> Needs deciding before Month 3, with a fallback if credits run out mid-semester.</li>
+        <li><strong>Image search — in or out?</strong> Recommend out for v1. The most expensive thing in the blueprint and the least relevant to robots.</li>
+        <li><strong>Refresh cadence?</strong> How often does the scraper re-run, and how is staleness shown in the UI?</li>
+      </ol>
+    </section>
+
+    <div class="verdict">
+      <p class="label">Verdict</p>
+      <p>Build the same <em>shape</em>: a planner routing to specialists, a grounded responder that can only speak about what this turn actually retrieved, memory in PostgreSQL, and LLM output validated by ordinary code before it reaches the database.</p>
+      <p>Do not build the same <em>system</em>: no GPUs, no Milvus, no NeMo Guardrails, and no apparel-shaped assumption that similarity search alone can answer "which robots support ROS 2". For robots, SQL is the authority and embeddings are the ranker — and that inversion, plus the compare and explain agents, is where RobotEshop is genuinely a different project rather than a re-skin of the blueprint.</p>
+    </div>
+
+  </main>
+
+  <footer>
+    Sources read: chain_server/src (graph, planner, retriever, cart, chatter, summarizer, agenttypes, main), catalog_retriever/src, memory_retriever/src, guardrails/src, shared/configs, docker-compose.yaml — commit fetched 15 Aug 2026.
+  </footer>
+
+</div>
+
+</body>
+</html>

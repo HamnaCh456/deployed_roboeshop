@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 12" width="240" height="120" role="img" aria-label="Servo">
+  <!-- The Servo mark. Master geometry: ui/src/components/Mark.tsx. -->
+  <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="12">
+    <rect width="24" height="12" fill="#fff"/>
+    <circle cx="12" cy="12" r="2.2" fill="#000"/>
+    <path d="M12 12 L19.5 4.5" stroke="#000" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </mask>
+  <path d="M0 12 A12 12 0 0 1 24 12 Z" fill="#000000" mask="url(#cut)"/>
+</svg>

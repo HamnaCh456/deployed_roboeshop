@@ -1,0 +1,825 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* NVIDIA color pallet: https://encycolorpedia.com/76b900 */
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: normal;
+  font-weight: 300;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_Lt.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: italic;
+  font-weight: 300;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_LtIt.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_Rg.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: italic;
+  font-weight: 400;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_It.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_Md.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: italic;
+  font-weight: 500;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_MdIt.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_Bd.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "NVIDIA Sans";
+  font-style: italic;
+  font-weight: 700;
+  font-display: fallback;
+  src: url("https://brand-assets.cne.ngc.nvidia.com/assets/fonts/nvidia-sans/1.0.0/NVIDIASans_BdIt.woff2")
+    format("woff2");
+}
+
+/* Vercel-style preview: `--primary` is ink now, so anything upstream that still
+   reads it turns achromatic rather than green. See
+   docs/superpowers/specs/2026-09-19-vercel-style-catalogue-preview-design.md. */
+*,
+html {
+  --primaryGradient: linear-gradient(0deg, #000000 0%, #000000 100%);
+  --secondaryGradient: linear-gradient(0deg, #000000 0%, #000000 100%);
+  --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
+  --primary: #171717;
+  --secondary: #000000;
+}
+
+/* CHATBOX
+=============== */
+.chatbox {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+/* border:solid blue; */
+  top: var(--nav-h);               /* below the navbar, whatever its height */
+  bottom: 0;
+  right: 0px;
+  z-index: 9999999;
+  font-family: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "calt" 0, "rlig", "ss11";
+  font-weight: 400;
+  /* border:solid red; */
+
+  height: auto;
+  width: 60vw;
+}
+
+/* CONTENT IS CLOSE */
+.chatbox__support {
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+  /* width: 300px;
+  height: 300px; */
+  /* border:solid blue; */
+  z-index: -9999999;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+}
+
+/* CONTENT ISOPEN */
+.chatbox--active {
+  /* transform: translateY(-40px); */
+  z-index: 9999999;
+  opacity: 1;
+  height: 100%;
+}
+
+/* BUTTON */
+.chatbox__button {
+  display: none;
+  text-align: right;
+
+}
+
+.send__button {
+  padding: 6px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.reset__button {
+  padding: 6px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* HEADER */
+.chatbox__header {
+  position: sticky;
+  top: 0;
+  background: orange;
+}
+
+/* MESSAGES */
+.chatbox__messages {
+  margin-top: auto;
+  display: flex;
+  overflow-y: scroll;
+  flex-direction: column-reverse;
+}
+
+.messages__item {
+  background: black;
+  max-width: 60.6%;
+  width: fit-content;
+}
+
+.messages__item--user {
+  margin-left: auto;
+  color: black;
+}
+
+.messages__item--user_image {
+  margin-left: auto;
+  margin-top: 10px;
+  background: #f8f9fa;
+  color:white;
+  max-width: 50%;
+}
+
+.messages__item--assistant {
+  margin-right: auto;
+  color: black;
+}
+
+/* FOOTER */
+.chatbox__footer {
+  position: sticky;
+  bottom: 0;
+}
+
+.chatbox__guardrail{
+  background: white;
+  padding: 0px 20px;
+  flex: 0 0 auto;
+}
+
+/* The panel ground is the paper canvas; a hairline on the left edge separates
+   it from the page instead of a shadow. */
+.chatbox__support {
+  background: #fafafa;
+  /* height: 700px;
+  width: 700px; */
+  box-shadow: -1px 0 0 #ebebeb;
+  flex-grow: 1;
+  width: 100%;
+}
+
+/* HEADER */
+.chatbox__header {
+  background: #fafafa;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+  /* border-top-left-radius: 20px;
+  border-top-right-radius: 20px; */
+  background-color: #fafafa;
+  /* Fixed chrome is kept compact so the message area, which takes the
+     remaining space, stays usable on laptop-height screens. */
+  height: 48px;
+  flex: 0 0 auto;
+  border-bottom: 1px solid #ebebeb;
+  gap: 8px;
+}
+
+/* The Servo mark before the panel name, pure black like the navbar's. */
+.chatbox__mark {
+  flex: 0 0 auto;
+  color: #000000;
+}
+
+.chatbox__image--header {
+  margin-right: 50px;
+  margin-top: 10px;
+}
+
+/* The panel name is a mono stamp: it is a label on the chrome, not a title. */
+.chatbox__heading--header {
+  color: #171717;
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+}
+
+.chatbox__heading--x {
+  position: absolute;
+  color: #292929;
+  opacity: 0.5;
+  font-size: 22px;
+  font-weight: 100;
+  margin-left: auto;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+  right: 20px;
+  top: 20px;
+}
+
+.chatbox__description--header {
+  font-size: 1.1rem;
+  color: white;
+}
+
+/* Messages */
+.chatbox__messages {
+  padding: 12px 20px;
+  color: black;
+  /* `auto`, not `scroll`: `scroll` reserves a permanent native scrollbar
+     (arrow buttons and all) even when there is nothing to scroll. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cfcfcf transparent;
+}
+
+/* Slim, unobtrusive scrollbar in place of the default Windows one. */
+.chatbox__messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatbox__messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatbox__messages::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 4px;
+}
+
+.chatbox__messages::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+.messages__item {
+  margin-top: 10px;
+  background: transparent;
+  padding: 8px 6px;
+  max-width: 70%;
+  font-size: 1rem;
+  line-height: 1.6;
+
+}
+
+/* Bubbles are cards: 6px radius, stacked-ring hairline, no shadow. The corner
+   nearest the speaker is squared to 2px, so the asymmetry still says who is
+   talking without a 20px pill. The assistant is a white card on the canvas. */
+.messages__item--assistant,
+.messages__item--typing {
+  margin-top: 10px;
+  border-radius: 6px;
+  border-bottom-left-radius: 2px;
+  background: #ffffff;
+  color: #171717;
+  max-width: 70%;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 12px 16px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+}
+
+.messages__item--assistant--p {
+  margin-top: 10px;
+  margin-bottom: 2px;
+  color: #171717;
+  border: none;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.messages__item--assistant--ol {
+  color: #171717;
+  list-style-type: decimal;
+  border: none;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ol li {
+  margin-bottom: 15px;
+  display: block;
+  counter-increment: count-me;
+  font-size: 1rem;
+  padding: 8px 12px;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ol li::before {
+  /* content: counter(count-me) ". "; */
+  color: #171717;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ol li p {
+  position: relative;
+  color: #171717;
+  margin: 0px;
+  display: inline;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ol li p a {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #171717;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ul {
+  background: white;
+  color: #171717;
+  border: none;
+  font-size: 1rem;
+  padding: 8px 12px;
+  line-height: 1.6
+}
+
+.messages__item--assistant--ul li {
+  background: white;
+  color: #171717;
+  border: none;
+  margin-bottom: 15px;
+  margin-left: 25px;
+  font-size: 1rem;
+  list-style-type: none;
+  position: relative;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ul li::before {
+  content: ""; /* Necessary for a pseudo-element */
+  position: absolute; /* Position it relative to the li */
+  left: 0; /* Align to the left of the li content */
+  top: 0.45em; /* Center it vertically */
+  width: 10px; /* Size of the circle */
+  height: 10px; /* Size of the circle */
+  background-color: white; /* White circle */
+  border-radius: 50%; /* Make it round */
+  line-height: 1.6;
+}
+
+.messages__item--assistant--ul li p {
+  position: relative;
+  color: #171717;
+  margin: 0px;
+  display: inline;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.messages__item--assistant--li {
+  background: white;
+  color: #171717;
+  border: none;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* The user is the inverted card — the system's one dark surface, used as
+   punctuation. It flips the value scale so your own words stand apart from
+   the assistant's without a colour. */
+.messages__item--user {
+  border-radius: 6px;
+  border-bottom-right-radius: 2px;
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: #171717;
+  color: #ffffff;
+  padding: 12px 16px;
+}
+
+.messages__item--image {
+  margin: 10px 10px 0 0;
+  border-radius: 14px;
+  /* background: #dddddd; */
+  background: #f8f9fa;
+  color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  /* Uniform card width so a result set reads as a tidy grid rather than a
+     ragged row sized by each photo's aspect ratio. */
+  width: 158px;
+  max-width: 158px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.messages__item--image-img {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  height: auto;
+  width: 250px;
+  font-size: 1rem;
+  aspect-ratio: auto;
+}
+
+
+.messages__item--image-img-rowitem {
+  /* Cropped to a common ratio so every card in the row is the same size.
+     Scales down on laptop heights, where the upstream 340px was taller than
+     the entire message area. */
+  width: 100%;
+  height: min(200px, 24vh);
+  object-fit: cover;
+  display: block;
+  /* aspect-ratio: 3/4; */
+}
+
+.messages__item--image-box {
+  font-size: 1rem;
+  line-height: 1.35;
+  background-color: #323232;
+  color: lightgray;
+  padding: 8px 10px;
+  /* Fixed height keeps card bottoms aligned whether the product name wraps to
+     one line or two. */
+  height: 46px;
+  display: flex;
+  align-items: center;
+}
+
+.messages__item--image-box a {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: white;
+  width: 200px;
+
+}
+
+.messages__item--image-stars {
+  font-size: 0.8rem;
+  /* Clamp to two lines so a long product name cannot push the card taller
+     than its neighbours. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* width:200px; */
+}
+
+/* ROBOT RESULT CARDS
+   ===================
+   The same card family as .pcard in catalog.css: ink text, mono figures and
+   stamps, a stacked-ring hairline, no colour. Terminal Green (#297a3a) is the
+   one chromatic exception the system allows, and it is spent on exactly one
+   thing — the ✓ of a verified seller. */
+.robot-row {
+  --ink: #171717;
+  --slate: #666666;
+  --muted: #8f8f8f;
+  --rule: #ebebeb;
+  --verified: #297a3a;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* One scrolling line rather than a wrapping grid: a result set of any size
+     then costs exactly one card height, leaving the rest of the panel to the
+     conversation. */
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+  /* The message list is itself a flex column, so without this the row is
+     treated as shrinkable and collapses to its scrollbar. */
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #cfcfcf transparent;
+}
+
+.robot-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.robot-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.robot-row::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 3px;
+}
+
+/* The photo card at chat size, per
+   docs/superpowers/specs/2026-09-19-photo-card-design.md: the same shadow and
+   lift as .pcard and .tut-card, a 12px radius because the card is 212px wide,
+   and a shorter zoom. The row it sits in already scrolls, so the shadow has
+   the row's own padding to fall into. */
+.robot-card {
+  flex: 0 0 212px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 22px -8px rgba(0, 0, 0, 0.22);
+  isolation: isolate;
+  transform: translateZ(0);
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.robot-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 18px 36px -12px rgba(0, 0, 0, 0.32);
+}
+
+/* No rule under the photo: supplier images are shot on white, so the photo
+   and the body are one surface. */
+.robot-card__media {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* `contain`, like the catalogue: cropping a component cuts its pins off. */
+.robot-card__media img {
+  display: block;
+  width: 100%;
+  /* Shrinks on laptop heights so the card row and the reply both stay on
+     screen together. */
+  height: min(120px, 15vh);
+  padding: 10px;
+  box-sizing: border-box;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.robot-card:hover .robot-card__media img {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robot-card,
+  .robot-card__media img {
+    transition: none;
+  }
+
+  .robot-card:hover,
+  .robot-card:hover .robot-card__media img {
+    transform: none;
+  }
+}
+
+/* A mono stamp in a hairline pill, the ✓ in Terminal Green. */
+.robot-card__verified {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #fafafa;
+  box-shadow: 0 0 0 1px var(--rule);
+  color: var(--verified);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  padding: 1px 8px;
+  border-radius: 9999px;
+}
+
+.robot-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px 14px;
+}
+
+.robot-card__name {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  /* Two lines keeps every card in a row the same height. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.8em;
+}
+
+.robot-card__meta {
+  margin: 0;
+  color: var(--slate);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.robot-card__chips {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+/* Mono stamps in hairline boxes. The skill chip used to be amber; now it is
+   the one chip drawn in ink, which is all the emphasis the system has. */
+.robot-card__chip {
+  margin: 0;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fafafa;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.robot-card__chip--skill {
+  border-color: var(--ink);
+  background: #ffffff;
+  color: var(--ink);
+}
+
+.robot-card__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 1px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+
+.robot-card__amount {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.robot-card__offers {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.robot-card__tutorials {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+}
+
+/* FOOTER */
+.chatbox__footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #fafafa;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  /* The 20px margin here was dead space between the messages and the input. */
+  margin-top: 0;
+  flex: 0 0 auto;
+  border-top: 1px solid #ebebeb;
+}
+
+.chatbox__footer input {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  border: 0;
+  box-shadow: 0 0 0 1px #ebebeb;
+  background: #ffffff;
+  color: #171717;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: left;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.chatbox__footer input::placeholder {
+  color: #8f8f8f;
+}
+
+.chatbox__footer input:focus {
+  box-shadow: 0 0 0 1px #171717;
+}
+
+.chatbox__send--footer {
+  color: #171717;
+}
+
+.chatbox__button button,
+.chatbox__button button:focus,
+.chatbox__button button:visited {
+  padding: 10px;
+  background: white;
+  border: none;
+  outline: none;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.button-class {
+  cursor: pointer;
+}

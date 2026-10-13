@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:ai-sdk.dev)",
+      "mcp__claude_ai_bloom__bloom_list_brands",
+      "mcp__claude_ai_bloom__bloom_check_credits",
+      "mcp__claude_ai_bloom__bloom_generate_image",
+      "mcp__claude_ai_bloom__bloom_get_image",
+      "mcp__claude_ai_creatify__model_playground_list_models",
+      "mcp__claude_ai_creatify__model_playground_get_model_schema",
+      "mcp__claude_ai_creatify__model_playground_generate",
+      "mcp__claude_ai_creatify__model_playground_get",
+      "mcp__claude_ai_bloom__bloom_list_images",
+      "mcp__chrome-devtools__*",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "PowerShell(npx tsc:*)",
+      "PowerShell(npx eslint:*)",
+      "PowerShell(Invoke-WebRequest:*)",
+      "PowerShell(Invoke-RestMethod:*)",
+      "ClaudeInChromeDomain(localhost:3000)",
+      "mcp__claude-in-chrome__tabs_context_mcp"
+    ]
+  }
+}

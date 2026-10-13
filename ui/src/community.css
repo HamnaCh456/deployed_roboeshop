@@ -1,0 +1,1581 @@
+/**
+ * Community page — Vercel-style.
+ *
+ * Tokens are Vercel's, per
+ * docs/superpowers/specs/2026-09-19-vercel-style-catalogue-preview-design.md,
+ * and the page shares its shell, hero proportions and rail geometry with the
+ * tutorials page so the two read as one product. Three rules shape it:
+ *
+ *   - Achromatic. Canvas #fafafa, cards #ffffff with a stacked-ring hairline,
+ *     text on the #171717 / #4d4d4d / #666 scale. No green, no amber: a
+ *     rating is a row of filled ink segments, and the one primary action is
+ *     the filled black button.
+ *   - Geist Sans for reading. Geist Mono, small and uppercase, for every
+ *     label, count and figure.
+ *   - Figures are ranked, not uniform. See "FIGURES" below.
+ *
+ * The tokens are redeclared rather than imported from tutorials.css: sharing
+ * that file would make one page's styling load with the other's, and the two
+ * are meant to be independently editable (CLAUDE.md). The old token names are
+ * kept so the selectors below read the same; only their values changed.
+ */
+
+.community {
+  --ink: #171717;
+  --slate: #666666;
+  --body: #4d4d4d;
+  --muted: #8f8f8f;
+  --strong: #171717;
+  --rule: #ebebeb;
+  --hairline: #ebebeb;
+  --field: #ebebeb;
+  --ash: #c9c9c9;
+
+  --panel: #fafafa;
+  --media: #fafafa;
+  --surface: #ffffff;
+  --ring: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+  --radius: 6px;
+  --error: #171717;
+
+  --sans: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* The band under the navbar, matching .tutorials. */
+  height: var(--page-h);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--panel);
+  font-family: var(--sans);
+  font-feature-settings: "calt" 0, "rlig", "ss11";
+  color: var(--ink);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ash) transparent;
+}
+
+.community::-webkit-scrollbar {
+  width: 8px;
+}
+
+.community::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.community::-webkit-scrollbar-thumb {
+  background: var(--ash);
+  border-radius: 4px;
+}
+
+.community::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+.community :focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--ink);
+  border-radius: var(--radius);
+}
+
+/* The mono "stamp": tiny, uppercase, wide-tracked. Every label on the page
+   that is not prose is one of these. */
+.com-rail__legend,
+.com-chip,
+.com-tagged__brand,
+.com-review__brand,
+.com-sort {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+}
+
+.com-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* FIGURES
+   =======
+   Three tiers, with the membership of each listed here rather than scattered
+   through the file, so the ranking stays legible. Lining tabular figures
+   throughout. */
+
+/* Tier 1 — the number a decision turns on. */
+.com-review__price,
+.com-tagged__price {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* Tier 2 — a figure read in passing. */
+.com-rating__figure,
+.com-tagger__price,
+.com-hero__coverage b,
+.com-toolbar__count b {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Tier 3 — bookkeeping you should be able to ignore. */
+.com-rail__count,
+.com-review__sellers,
+.com-helpful__count,
+.com-threadtoggle__count,
+.com-counter {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+/* The currency is a mark on the amount, not part of it. Scoped to this page
+   rather than sharing tutorials.css's `.fig__unit`, so neither file can
+   redefine the other's out from under it. */
+.com-unit {
+  font-size: 0.7em;
+  font-weight: 400;
+  letter-spacing: 0.071em;
+  color: var(--slate);
+  margin-right: 0.36em;
+}
+
+.com-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* HERO
+   ====
+   The claim on the left, the way in on the right — the same two-column band as
+   the tutorials hero, and held to the same ~115px by the same rules
+   (DESIGN.md §3, "Page headers"). Coverage is a sentence, not a strip of stat
+   tiles: a figure only earns display size when something turns on it.
+
+   This band was ~250px. A 30px title over a 17ch measure wrapped to two lines,
+   the lead ran three more, coverage and the dead-on-arrival rate took a
+   paragraph each, and the button sat above the search rather than beside it —
+   five separate decisions each costing a line, none of them wrong on its own. */
+.com-hero {
+  background: var(--panel);
+  border-bottom: 1px solid var(--hairline);
+  padding: 14px 0 12px;
+}
+
+.com-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 12px 44px;
+  align-items: center;
+}
+
+.com-hero__title {
+  margin: 0;
+  color: var(--strong);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+/* Wide on purpose: a 54ch measure is right for an article and wrong for a
+   header, where it only buys lines. */
+.com-hero__lead {
+  margin: 4px 0 0;
+  max-width: 88ch;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.com-hero__coverage {
+  margin: 2px 0 0;
+  color: var(--slate);
+  font-size: 13px;
+  line-height: 1.54;
+}
+
+.com-hero__lead b,
+.com-hero__coverage b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The dead-on-arrival count is the one figure on the page worth emphasis. The
+   system has no accent hue to give it, so it takes weight instead: ink at
+   medium, inside the sentence, never in a tile. */
+.com-hero__coverage b.com-hero__signal {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.com-hero__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* Search takes the room, the button takes what it needs. */
+.com-hero__seek {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.com-hero__seek .com-search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.com-hero__note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.com-search input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.com-search input::placeholder {
+  color: var(--muted);
+}
+
+.com-search input:focus {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* BUTTONS
+   =======
+   `.com-button` is the filled black primary — the strongest weight in the
+   system and the one thing on a page that reaches #171717 as a fill. Text
+   links are the lowest-weight interactive: charcoal, underlined, ink on
+   hover.
+
+   Scoped under `.community` for the same reason `.auth-card .auth-button`
+   is: Tailwind's preflight clears `button` and `[type="submit"]` backgrounds
+   at single-class specificity, and stylesheet order differs between dev and
+   a production build. The ancestor makes the fill win in both. */
+.community .com-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  /* Also worn by a next/link when the action is "go sign in". */
+  text-decoration: none;
+  text-align: center;
+}
+
+/* The hero's copy of the button, sized to the band rather than to a page that
+   has room. Everywhere else — empty states, the composer — keeps the full
+   size, because there the button is the thing on screen. */
+.community .com-button--compact {
+  /* `.com-button` pins itself to the start of a column; in a row beside a
+     search field that would top-align it against the input. */
+  align-self: auto;
+  height: 32px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.com-button:hover:not(:disabled) {
+  background: #000000;
+}
+
+.com-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.com-linkbutton {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  color: var(--body);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.com-linkbutton:hover {
+  color: var(--ink);
+}
+
+/* Taking back your own review is not an encouraged action, so it sits one
+   step lighter than the other links. */
+.com-linkbutton--quiet {
+  color: var(--slate);
+}
+
+.com-linkbutton--quiet:hover {
+  color: var(--ink);
+}
+
+/* Ghost outline: the secondary action, inverting to the primary on hover. */
+.com-clear {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--field);
+  font: inherit;
+  font-size: 14px;
+  color: var(--body);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.com-clear:hover {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* RATING
+   ======
+   Five segments rather than five stars. Everything else on a data surface in
+   this app is a small rectangle with a hairline rule — chips, badges, the
+   bill of materials — so the rating is drawn from that vocabulary instead of
+   being the one rounded, organic shape on the page. Filled ink for a lit
+   segment and hairline grey for an unlit one: a score is a value, and the
+   system draws values in tone, not hue. 2px radius rather than the 4px chip
+   radius: at 9px tall, 4px reads as a lozenge. */
+.com-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.com-rating__track {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.com-rating__seg {
+  width: 15px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--rule);
+}
+
+.com-rating__seg--on {
+  background: var(--ink);
+}
+
+.com-rating__figure {
+  color: var(--ink);
+}
+
+/* The same bar as a control. The fill is the *value being set*; the
+   affordance is the hover tone and the focus ring. */
+.com-ratinginput {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.com-ratinginput__track {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.com-ratinginput__seg {
+  position: relative;
+  width: 38px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--rule);
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.com-ratinginput__seg:hover {
+  background: var(--ash);
+}
+
+.com-ratinginput__seg--on,
+.com-ratinginput__seg--on:hover {
+  background: var(--ink);
+}
+
+/* The radio covers its whole segment and is made invisible with
+   `appearance: none` rather than `opacity: 0`. Opacity would take the focus
+   outline down with it, leaving keyboard users no indicator at all; stripping
+   the appearance keeps the element paintable, so the ring below actually
+   draws. It also avoids needing `:has()` for the ring, which is still missing
+   from enough browsers to matter for something as load-bearing as focus. */
+.com-ratinginput__seg input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.com-ratinginput__seg input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+}
+
+.com-ratinginput__meaning {
+  font-size: 13px;
+  color: var(--body);
+}
+
+/* BODY: rail + feed
+   ================= */
+.com-body {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  gap: 28px;
+  padding: 20px 0 48px;
+  align-items: start;
+}
+
+/* Nothing written yet means nothing to filter, so the column collapses rather
+   than standing empty beside the composer.
+
+   Written as a double class on purpose. At one class it ties with `.com-body`,
+   and the responsive overrides further down the file would then win on source
+   order and put the 180px rail column back at narrow widths — with no rail in
+   it. Two classes beat one at every breakpoint, whatever the order. */
+.com-body.com-body--norail {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.com-rail {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.com-rail__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.com-rail__legend {
+  padding: 0;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.com-rail__group + .com-rail__group {
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.com-rail__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.43;
+  color: var(--body);
+  cursor: pointer;
+}
+
+.com-rail__option:hover .com-rail__label {
+  color: var(--ink);
+}
+
+.com-rail__option input {
+  accent-color: var(--ink);
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.com-rail__label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.com-rail__count {
+  flex: 0 0 auto;
+}
+
+.com-rail__option--off .com-rail__label,
+.com-rail__option--off .com-rail__count {
+  color: var(--ash);
+}
+
+/* COMPOSER
+   ========
+   Inline rather than a modal: the feed stays visible while you write, which is
+   where the house style for a review is learnt. */
+.com-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 22px 24px 24px;
+  box-shadow: var(--ring);
+  margin-bottom: 8px;
+}
+
+.com-form__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.com-form__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.com-form__lead {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.com-form__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 2px;
+}
+
+.com-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.com-field__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.com-field__foot > p {
+  margin: 0;
+}
+
+.com-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.com-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--slate);
+}
+
+/* Errors state what to do, not that something is invalid (DESIGN.md §8). The
+   system has no red: an error is ink at medium weight, and the field it
+   belongs to takes an ink ring. */
+.com-error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--error);
+}
+
+.com-counter {
+  flex: 0 0 auto;
+}
+
+.com-input,
+.com-select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.com-input::placeholder {
+  color: var(--muted);
+}
+
+.com-input:focus,
+.com-select:focus {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.com-input--area {
+  resize: vertical;
+  min-height: 108px;
+  line-height: 1.5;
+}
+
+.com-input--invalid {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.com-select {
+  cursor: pointer;
+}
+
+/* THE OPEN LIST
+   Chrome 135+ lets a page style the native <select> picker through
+   `appearance: base-select`; without it the open list is the OS one, blue
+   highlight and all, and no amount of CSS reaches it. A browser that does not
+   know the value ignores this whole block and keeps its native picker, so
+   nothing breaks elsewhere. The list borrows the tagger panel's surface (white,
+   6px, one hairline ring and a faint drop shadow); rows go paper on hover and
+   hairline once chosen, ink text throughout, no tick. Applies to both selects
+   on the page: "Time in use" in the composer and the sort in the toolbar. */
+.com-select,
+.com-select::picker(select),
+.com-sort select,
+.com-sort select::picker(select) {
+  appearance: base-select;
+}
+
+.com-select::picker-icon,
+.com-sort select::picker-icon {
+  color: var(--slate);
+}
+
+.com-select::picker(select),
+.com-sort select::picker(select) {
+  margin-top: 6px;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.com-select option,
+.com-sort select option {
+  padding: 7px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+}
+
+.com-select option:hover,
+.com-select option:focus-visible,
+.com-sort select option:hover,
+.com-sort select option:focus-visible {
+  background: var(--panel);
+  outline: none;
+}
+
+.com-select option:checked,
+.com-sort select option:checked {
+  background: var(--hairline);
+}
+
+.com-select option::checkmark,
+.com-sort select option::checkmark {
+  display: none;
+}
+
+/* PRODUCT TAGGER
+   ==============
+   The one control on the page that has to be good — a review with no part
+   attached is a forum post. */
+.com-tagger {
+  position: relative;
+}
+
+/* A floating panel is the one place a soft shadow is earned: it has to read
+   as above the form, and a ring alone cannot say that. Kept faint. */
+.com-tagger__panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.com-tagger__list {
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ash) transparent;
+}
+
+.com-tagger__list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.com-tagger__list::-webkit-scrollbar-thumb {
+  background: var(--ash);
+  border-radius: 4px;
+}
+
+.com-tagger__option {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.com-tagger__option:hover {
+  background: var(--panel);
+}
+
+.com-tagger__option--on,
+.com-tagger__option--on:hover {
+  background: var(--hairline);
+}
+
+.com-tagger__thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background: var(--media);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.com-tagger__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.com-tagger__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.com-tagger__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.com-tagger__meta {
+  font-size: 12px;
+  color: var(--slate);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.com-tagger__price {
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.com-tagger__note {
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--body);
+}
+
+/* The chosen part, shown the way it will read on the posted review. */
+.com-tagged {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--media);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+
+.com-tagged__media {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--ash);
+  text-align: center;
+}
+
+.com-tagged__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.com-tagged__body {
+  min-width: 0;
+}
+
+.com-tagged__brand,
+.com-tagged__name,
+.com-tagged__price {
+  margin: 0;
+}
+
+.com-tagged__brand {
+  color: var(--slate);
+}
+
+.com-tagged__name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 2px 0 3px;
+}
+
+.com-tagged__sellers {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 10px;
+}
+
+/* BENCH DETAIL
+   ============
+   The three fields that make this a robotics review rather than a generic one.
+   Boxed and marked optional so nobody stalls on a question they cannot answer. */
+.com-bench {
+  margin: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--media);
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.com-bench__legend {
+  padding: 0 6px;
+  margin-left: -6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.com-bench__legend span {
+  font-weight: 400;
+  color: var(--slate);
+  margin-left: 6px;
+}
+
+.com-bench__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.com-choices {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px;
+}
+
+/* Segmented buttons rather than a row of radio dots: three mutually exclusive
+   answers read faster as three things you pick between. */
+/* Ghost outline at rest; the chosen one inverts to filled ink, the way every
+   ghost button in the system does on hover. */
+.com-choice {
+  position: relative;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--body);
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.com-choice:hover {
+  box-shadow: 0 0 0 1px var(--ash);
+}
+
+.com-choice--on,
+.com-choice--on:hover {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* Invisible via `appearance: none`, not `opacity: 0` — see the note at
+   `.com-ratinginput__seg input`. */
+.com-choice input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.com-choice input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+}
+
+/* TOOLBAR
+   ======= */
+.com-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 4px 0 14px;
+}
+
+.com-toolbar__count {
+  margin: 0;
+  font-size: 14px;
+  color: var(--body);
+}
+
+.com-toolbar__count b {
+  color: var(--ink);
+  font-weight: 400;
+  margin-right: 1px;
+}
+
+/* The label is a mono stamp (sized by the eyebrow group at the top); the
+   select is bare, and shows its box on hover. */
+.com-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--slate);
+}
+
+.com-sort select {
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  padding: 4px 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.com-sort select:hover {
+  background: var(--hairline);
+}
+
+/* THE REVIEW
+   ==========
+   Same card surface as .tut-card and .pcard, per
+   docs/superpowers/specs/2026-09-19-photo-card-design.md: 16px radius, a
+   soft drop shadow, a hover lift. A review is prose rather than a photo, so
+   it keeps its own layout — the strip across the top is what makes it this
+   app's review and not a generic one: the part, its photo, what it cost and
+   how many sellers carry it, so the opinion is anchored to something
+   orderable. */
+.com-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  /* Room for the shadow to fall. */
+  padding: 4px 4px 24px;
+}
+
+.com-review {
+  --card-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 10px 28px -8px rgba(0, 0, 0, 0.22);
+  --card-shadow-hover:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 24px 48px -12px rgba(0, 0, 0, 0.34);
+
+  background: var(--surface);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transform: translateZ(0);
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* A smaller lift than the grid cards: a full-width card that jumps 3px
+   moves a lot of page. */
+.com-review:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.com-review__product {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  background: var(--media);
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 20px;
+}
+
+.com-review__thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--ash);
+  text-align: center;
+}
+
+.com-review__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.com-review__producttext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.com-review__brand {
+  color: var(--slate);
+}
+
+.com-review__productname {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.com-review__productname:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.com-review__price {
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+}
+
+.com-review__sellers {
+  margin-left: 10px;
+}
+
+.com-review__body {
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Bar and headline on one line: the score qualifies the sentence, so reading
+   them apart loses the point of both. */
+.com-review__verdict {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.com-review__title {
+  margin: 0;
+  flex: 1 1 18ch;
+  min-width: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* Capped for reading, while the card itself stays full width so the price and
+   the seller count keep their column. Prose at 940px is not read, it is
+   scanned and abandoned. */
+.com-review__text {
+  margin: 0;
+  max-width: 74ch;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.com-review__chips {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.com-chip {
+  margin: 0;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--media);
+  color: var(--slate);
+  white-space: nowrap;
+}
+
+/* Filled ink: the inverted surface, used sparingly as punctuation. The same
+   treatment carries the video runtime on a tutorial thumbnail. */
+.com-chip--dead {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.com-review__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+
+.com-review__by {
+  margin: 0;
+  font-size: 13px;
+  color: var(--slate);
+}
+
+.com-review__by b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.com-review__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Voting is a ghost outline button — an action, but not the primary one on
+   this page. Once you have voted it stays inverted, so the state reads. */
+.com-helpful {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--field);
+  border-radius: var(--radius);
+  background: transparent;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--body);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.com-helpful:hover:not(:disabled) {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.com-helpful:hover:not(:disabled) .com-helpful__count {
+  color: inherit;
+}
+
+.com-helpful--on {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px var(--ink);
+  cursor: default;
+}
+
+.com-helpful--on .com-helpful__count {
+  color: inherit;
+}
+
+/* THREAD
+   ======
+   One review, one discussion, rendered inside the card that started it. The
+   panel is tinted and inset rather than bordered: a second box on a white card
+   would read as a second post, and the whole point is that this is not one.
+
+   Flat by design. There is no nesting level below `.com-reply`, and nothing in
+   here can create one — answering a person is an `@name` in the box, so the
+   column stays a column however long the argument runs. */
+.com-thread {
+  /* Bled out to the card's edges, so the panel is a band across the card and
+     not a box inside it. The negative margins are the card body's own padding
+     (`.com-review__body`, 14px 16px 13px) — keep them in step. The 9px flex gap
+     above is the space between the foot and the rule. */
+  margin: 0 -16px -13px;
+  padding: 12px 16px 14px;
+  background: var(--media);
+  border-top: 1px solid var(--rule);
+}
+
+.com-thread__list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The rail down the left is what says "these hang off the review above" — one
+   line doing the job an indent tree would need four levels of margin for. */
+.com-reply {
+  padding-left: 11px;
+  border-left: 2px solid var(--rule);
+}
+
+.com-reply__by {
+  margin: 0 0 2px;
+  font-size: 12px;
+  color: var(--slate);
+}
+
+.com-reply__by b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.com-reply__text {
+  margin: 0;
+  color: var(--body);
+  font-size: 13px;
+  line-height: 1.54;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.com-reply__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.com-reply__actions .com-linkbutton {
+  font-size: 12px;
+}
+
+.com-thread__empty {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.com-replyform {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.com-replyform__box {
+  resize: vertical;
+  min-height: 56px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.com-replyform__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.com-replyform__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+/* The way into the thread and the size of the thread are one control. Quiet by
+   default — it is a door, not a call to action — and it steps up to ink only
+   while the thread it opened is open. */
+.com-threadtoggle {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  color: var(--slate);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.com-threadtoggle:hover {
+  color: var(--ink);
+}
+
+.com-threadtoggle--on,
+.com-threadtoggle--on:hover {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The count is a tier-3 figure and carries its own grey; while the thread is
+   open it follows the label. */
+.com-threadtoggle--on .com-threadtoggle__count {
+  color: inherit;
+}
+
+/* EMPTY STATES
+   ============
+   Both say what happened and what to do next. Neither says "no results" — one
+   is a page nobody has written to yet, the other is a filter combination, and
+   they need different answers (DESIGN.md §8). */
+.com-empty {
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--ring);
+  padding: 32px 28px;
+  max-width: 58ch;
+}
+
+.com-empty h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.com-empty p {
+  margin: 0 0 14px;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.com-empty__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* RESPONSIVE
+   ==========
+   The rail is the first thing to give up its column, matching tutorials. */
+@media (max-width: 1080px) {
+  .com-body {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .com-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+  }
+
+  .com-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .com-rail {
+    position: static;
+    flex-flow: row wrap;
+    gap: 20px 32px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  /* Side by side, groups would otherwise size to their longest label and the
+     counts would sit at four different distances from the text. */
+  .com-rail__group {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .com-shell {
+    padding: 0 18px;
+  }
+
+  .com-hero__title {
+    font-size: 18px;
+  }
+
+  .com-form {
+    padding: 18px 16px 20px;
+  }
+
+  .com-bench__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The price drops below the name rather than squeezing it to nothing. */
+  .com-review__product {
+    grid-template-columns: 44px minmax(0, 1fr);
+    row-gap: 6px;
+  }
+
+  .com-review__price {
+    grid-column: 2;
+  }
+
+  .com-ratinginput__seg {
+    width: 30px;
+  }
+
+  /* Name box and buttons on one row runs out of width here; the actions drop
+     under the name rather than the "Post reply" label wrapping inside itself. */
+  .com-replyform__actions {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .com-review:hover {
+    transform: none;
+  }
+
+  .com-review,
+  .community .com-button,
+  .com-choice,
+  .com-helpful,
+  .com-threadtoggle,
+  .com-input,
+  .com-select,
+  .com-ratinginput__seg,
+  .com-search input {
+    transition: none;
+  }
+}

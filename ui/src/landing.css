@@ -1,0 +1,700 @@
+/**
+ * Landing page. Design record:
+ * docs/superpowers/specs/2026-09-19-landing-page-design.md.
+ *
+ * Tokens are DESIGN.md's (the Vercel system), redeclared under --l-* so this
+ * file stands alone, the same rule community.css follows. Two things here
+ * are deliberate departures from that system and are noted where they
+ * happen: the hero photograph (section "HERO") and white type on it.
+ *
+ * Type: Geist at weight 450 with -0.06em tracking for display, line-height
+ * 1. Geist Mono, 11px, uppercase, 0.071em for every eyebrow, count and
+ * figure. Radii 6px, pills 9999px. Depth is a stacked-ring hairline, never a
+ * drop shadow.
+ */
+
+.landing {
+  --l-canvas: #fafafa;
+  --l-paper: #ffffff;
+  --l-band: #ebebeb;
+  --l-hairline: #ebebeb;
+  --l-ash: #c9c9c9;
+  --l-smoke: #a8a8a8;
+  --l-graphite: #8f8f8f;
+  --l-slate: #7d7d7d;
+  --l-stone: #666666;
+  --l-charcoal: #4d4d4d;
+  --l-ink: #171717;
+  --l-green: #297a3a;
+  --l-ring: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 2px #fafafa;
+  --l-ring-hover: 0 0 0 1px rgba(0, 0, 0, 0.16), 0 0 0 2px #fafafa;
+  --l-sans: Geist, "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --l-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --l-max: 1280px;
+  --l-gap: 112px;
+
+  height: var(--page-h);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--l-ash) transparent;
+  background: var(--l-canvas);
+  color: var(--l-ink);
+  font-family: var(--l-sans);
+  font-feature-settings: "calt" 0, "rlig", "ss11";
+  -webkit-font-smoothing: antialiased;
+}
+
+.landing::-webkit-scrollbar { width: 8px; }
+.landing::-webkit-scrollbar-track { background: transparent; }
+.landing::-webkit-scrollbar-thumb { background: var(--l-ash); border-radius: 4px; }
+.landing::-webkit-scrollbar-thumb:hover { background: var(--l-smoke); }
+
+.landing a { color: inherit; text-decoration: none; }
+
+/* ---------- shared pieces ---------- */
+
+.landing .wrap {
+  max-width: var(--l-max);
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.landing .mono {
+  font-family: var(--l-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.landing .eyebrow {
+  font-family: var(--l-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: var(--l-ink);
+  margin: 0 0 12px;
+}
+.landing .eyebrow--muted { color: var(--l-graphite); }
+.landing .eyebrow--light { color: rgba(255, 255, 255, 0.75); }
+
+.landing .display {
+  font-size: clamp(36px, 4.5vw, 64px);
+  font-weight: 450;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  margin: 0;
+  color: var(--l-ink);
+}
+.landing .display--wrap { max-width: 18ch; }
+.landing .display--light { color: #ffffff; }
+
+.landing .lead {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--l-charcoal);
+  max-width: 640px;
+  margin: 20px 0 0;
+}
+
+.landing .pill {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  border-radius: 9999px;
+  padding: 13px 22px;
+  white-space: nowrap;
+}
+.landing .pill--ink {
+  background: var(--l-ink);
+  color: #ffffff;
+}
+.landing .pill--ink:hover { background: #000000; }
+.landing .pill--ghost {
+  color: var(--l-charcoal);
+  box-shadow: 0 0 0 1px var(--l-hairline);
+}
+.landing .pill--ghost:hover { box-shadow: 0 0 0 1px var(--l-ash); color: var(--l-ink); }
+
+.landing .section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+/* Reveal: faded and 14px low until `is-in`, then eased to rest. Once. */
+.landing .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.landing .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing { scroll-behavior: auto; }
+  .landing .reveal { opacity: 1; transform: none; transition: none; }
+  .landing .numbers .eyebrow { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- ASK BAR ---------- */
+
+.landing .ask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  max-width: 560px;
+  width: 100%;
+  margin: 20px auto 0;
+  padding: 0 6px 0 16px;
+  background: var(--l-paper);
+  border-radius: 6px;
+  box-shadow: var(--l-ring);
+  transition: box-shadow 0.15s ease;
+}
+.landing .ask:focus-within {
+  box-shadow: 0 0 0 1px var(--l-ink), 0 0 0 2px #fafafa;
+}
+.landing .ask__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 400 15px/1 var(--l-sans);
+  color: var(--l-ink);
+}
+.landing .ask__input::placeholder { color: var(--l-smoke); }
+.landing .ask__kbd {
+  flex: none;
+  font: 400 11px/1 var(--l-mono);
+  color: var(--l-graphite);
+  padding: 4px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--l-hairline);
+}
+.landing .ask__go {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--l-stone);
+  cursor: pointer;
+}
+.landing .ask__go:hover { background: var(--l-canvas); color: var(--l-ink); }
+
+/* ---------- HERO ---------- */
+
+/* The photograph. DESIGN.md's system has no photography; this is the one
+   permitted exception, and white type on it is the consequence. The copy is
+   held in the top third so the robot in the centre of the frame stays
+   uncovered: `object-position` pins the crop as the viewport changes. */
+.landing .hero {
+  position: relative;
+  min-height: 560px;
+  height: var(--page-h);
+  max-height: 900px;
+  overflow: hidden;
+  color: #ffffff;
+}
+.landing .hero__photo {
+  object-fit: cover;
+  object-position: center 45%;
+}
+.landing .hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 30%,
+    rgba(0, 0, 0, 0) 48%
+  );
+}
+.landing .hero__copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9%;
+  padding: 0 32px;
+  text-align: center;
+}
+.landing .hero__title {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 450;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  margin: 0;
+  color: #ffffff;
+}
+.landing .hero__examples {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+.landing .hero__examples a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+}
+.landing .hero__examples a:hover { text-decoration-color: #ffffff; }
+.landing .hero__stats {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- STORES ---------- */
+
+/* A marquee. The track is two copies of the list laid end to end; the
+   keyframe moves it by half its own width, which is exactly one copy, so the
+   loop lands where it started. The mask fades each edge into the canvas so
+   names appear and leave rather than getting clipped. Pauses on hover so a
+   name can be read. */
+.landing .stores {
+  max-width: var(--l-max);
+  margin: 0 auto;
+  padding: 40px 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.landing .stores__track {
+  display: flex;
+  width: max-content;
+  animation: stores-flow 28s linear infinite;
+}
+.landing .stores:hover .stores__track { animation-play-state: paused; }
+.landing .stores__set {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.landing .stores__name {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--l-slate);
+  white-space: nowrap;
+  padding: 0 48px;
+}
+@keyframes stores-flow {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing .stores__track { animation: none; }
+}
+
+/* ---------- OUTCOME BAND ---------- */
+
+/* One tone below the canvas, as their band is. Everything plays from
+   `.outcome.is-in`, which OutcomeBand.tsx sets once through useReveal. Each
+   outline's `--len` is its own path length: dasharray and starting offset
+   both, so the transition to 0 draws the whole shape and nothing more. */
+.landing .outcome {
+  position: relative;
+  height: 92vh;
+  min-height: 620px;
+  max-height: 860px;
+  background: var(--l-band);
+  overflow: hidden;
+}
+.landing .outcome__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.landing .outcome__draw {
+  fill: none;
+  stroke: var(--l-ink);
+  stroke-width: 1.5;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.landing .outcome__hair {
+  fill: none;
+  stroke: var(--l-ash);
+  stroke-width: 1;
+  stroke-dasharray: 1440;
+  stroke-dashoffset: 1440;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.landing .outcome.is-in .outcome__draw,
+.landing .outcome.is-in .outcome__hair { stroke-dashoffset: 0; }
+
+/* The fill starts one block-height below itself, hidden by the clipped
+   group around it, and rises once the outline is most of the way drawn. */
+.landing .outcome__fill {
+  fill: var(--l-ink);
+  transform-box: fill-box;
+  transform: translateY(100%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+.landing .outcome.is-in .outcome__fill { transform: none; }
+
+.landing .outcome__signal {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 22 1400;
+  animation: outcome-run 5s linear infinite;
+  opacity: 0;
+  /* After the fill has landed. */
+  transition: opacity 0.6s ease 1.6s;
+}
+.landing .outcome.is-in .outcome__signal { opacity: 1; }
+@keyframes outcome-run {
+  from { stroke-dashoffset: 1422; }
+  to { stroke-dashoffset: 0; }
+}
+
+.landing .outcome__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 32px;
+}
+.landing .outcome__copy .eyebrow { color: var(--l-stone); margin-bottom: 16px; }
+.landing .outcome__copy .display { font-size: clamp(40px, 5.6vw, 72px); }
+.landing .outcome__copy .lead { text-align: center; }
+.landing .outcome__copy .pill { margin-top: 28px; }
+
+.landing .outcome__copy > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.landing .outcome__copy > :nth-child(2) { transition-delay: 0.1s; }
+.landing .outcome__copy > :nth-child(3) { transition-delay: 0.25s; }
+.landing .outcome__copy > :nth-child(4) { transition-delay: 0.4s; }
+.landing .outcome.is-in .outcome__copy > * {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .outcome__draw,
+  .landing .outcome__hair { stroke-dashoffset: 0 !important; }
+  .landing .outcome__fill { transform: none; transition: none; }
+  .landing .outcome__signal { animation: none; }
+  .landing .outcome__copy > * { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- NUMBERS ---------- */
+
+/* Narrower than the wrap and centred, so the four figures sit in the middle
+   of the page rather than at its edges. The figures count up in
+   Numbers.tsx; the captions fade in here, each a beat after its figure
+   starts (the 0.3s head start is the band's own reveal). */
+.landing .numbers {
+  padding-top: var(--l-gap);
+  padding-bottom: var(--l-gap);
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+.landing .numbers__value {
+  font-family: var(--l-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(40px, 4.5vw, 64px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--l-ink);
+}
+.landing .numbers .eyebrow {
+  margin: 10px 0 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.landing .numbers__item:nth-child(1) .eyebrow { transition-delay: 0.3s; }
+.landing .numbers__item:nth-child(2) .eyebrow { transition-delay: 0.42s; }
+.landing .numbers__item:nth-child(3) .eyebrow { transition-delay: 0.54s; }
+.landing .numbers__item:nth-child(4) .eyebrow { transition-delay: 0.66s; }
+.landing .numbers.is-in .eyebrow {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- SHOWCASE ---------- */
+
+/* Four photographs stacked in one full-bleed band; the second place the
+   design system's no-photography rule is set aside, for the same reason as
+   the hero. The active tab's underline is the clock: a 4s fill whose
+   `animationend` advances the slide (Showcase.tsx). Everything that moves
+   here obeys one play-state rule, so pausing the bar pauses the drift. */
+.landing .showcase {
+  --sc-hold: 4s;
+  position: relative;
+  height: min(80vh, 760px);
+  min-height: 520px;
+  overflow: hidden;
+  background: var(--l-ink);
+  color: #ffffff;
+}
+.landing .showcase__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* The outgoing slide drops out only after the incoming one has fully
+     faded in on top of it, so there is never a dip to the dark canvas. */
+  transition: opacity 0s 0.6s;
+}
+.landing .showcase__slide.is-active {
+  opacity: 1;
+  z-index: 1;
+  transition: opacity 0.6s ease;
+}
+.landing .showcase__photo {
+  object-fit: cover;
+  transform: scale(1.02);
+}
+/* The "video": a slow push-in over slightly longer than the hold, so the
+   drift is still under way when the slide is replaced. */
+.landing .showcase__slide.is-active .showcase__photo {
+  animation: showcase-drift calc(var(--sc-hold) + 1.5s) ease-out both;
+  will-change: transform;
+}
+@keyframes showcase-drift {
+  from { transform: scale(1.02) translate(0, 0); }
+  to { transform: scale(1.1) translate(-1.5%, -1%); }
+}
+.landing .showcase__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 32%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.28) 48%, rgba(0, 0, 0, 0) 78%);
+}
+.landing .showcase__copy {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 18%;
+  max-width: var(--l-max);
+  margin: 0 auto;
+  padding: 0 32px;
+  animation: showcase-copy 0.7s ease both;
+}
+@keyframes showcase-copy {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.landing .lead--light { color: rgba(255, 255, 255, 0.82); }
+.landing .showcase__copy .pill { margin-top: 28px; }
+.landing .pill--paper {
+  background: #ffffff;
+  color: var(--l-ink);
+}
+.landing .pill--paper:hover { background: var(--l-band); }
+
+.landing .showcase__tabs {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 36px;
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.landing .showcase__tab {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0 0 10px;
+  margin: 0;
+  position: relative;
+  font: inherit;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.62);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.landing .showcase__tab:hover,
+.landing .showcase__tab.is-active { color: #ffffff; }
+.landing .showcase__tab:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.landing .showcase__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+.landing .showcase__bar {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: showcase-fill var(--sc-hold) linear forwards;
+  animation-play-state: paused;
+}
+@keyframes showcase-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* One play-state rule. Running only while the band is on screen and not
+   under a mouse on the tab row or holding keyboard focus. The hover pause is
+   the tabs, not the whole band: a reader parking the cursor on the
+   photograph must not stop the tour. `:has(:focus-visible)` rather than
+   `:focus-within`, so a click on a tab does not freeze it. */
+.landing .showcase.is-live .showcase__bar { animation-play-state: running; }
+.landing .showcase:not(.is-live) .showcase__photo { animation-play-state: paused; }
+@media (hover: hover) {
+  .landing .showcase:has(.showcase__tabs:hover) .showcase__bar,
+  .landing .showcase:has(.showcase__tabs:hover) .showcase__photo { animation-play-state: paused; }
+}
+.landing .showcase:has(:focus-visible) .showcase__bar,
+.landing .showcase:has(:focus-visible) .showcase__photo { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .showcase__slide.is-active .showcase__photo { animation: none; }
+  .landing .showcase__slide,
+  .landing .showcase__slide.is-active { transition: none; }
+  .landing .showcase__copy { animation: none; }
+}
+
+/* ---------- FOOTER ---------- */
+
+/* On ink, in Profound's arrangement: brand block, then headed columns,
+   then a hairline and the legal line. Headings are white, links are muted
+   white and brighten on hover; the store names sit one shade dimmer still,
+   since they are not links. */
+.landing .foot {
+  background: var(--l-ink);
+  color: #ffffff;
+  padding-top: 96px;
+}
+.landing .foot__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: 48px;
+  align-items: start;
+}
+.landing .foot__brand { max-width: 36ch; }
+.landing .foot__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+}
+/* The Servo mark (components/Mark.tsx) fills with currentColor: white on
+   ink, the inverse of the navbar's. */
+.landing .foot__glyph {
+  display: inline-block;
+  flex: 0 0 auto;
+  color: #ffffff;
+}
+.landing .foot__about {
+  margin: 20px 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+}
+.landing .foot__col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.landing .foot__head {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #ffffff;
+}
+.landing .foot__link {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.15s ease;
+}
+.landing .foot__link:hover { color: #ffffff; }
+.landing .foot__source {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
+}
+.landing .foot__legal {
+  margin-top: 80px;
+  padding-top: 24px;
+  padding-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-family: var(--l-mono);
+  font-size: 11px;
+  letter-spacing: 0.071em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1024px) {
+  .landing .numbers { grid-template-columns: repeat(2, 1fr); }
+  .landing .foot__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .landing .foot__brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  .landing .wrap { padding-left: 16px; padding-right: 16px; }
+  .landing .hero { min-height: 480px; }
+  .landing .hero__copy { top: 7%; padding: 0 16px; }
+  .landing .ask__kbd { display: none; }
+  .landing .stores { padding: 24px 0; }
+  .landing .stores__name { padding: 0 28px; }
+  .landing .outcome { min-height: 520px; height: 70vh; }
+  .landing .showcase { height: 80vh; min-height: 560px; }
+  .landing .showcase__copy { top: 12%; padding: 0 16px; }
+  .landing .showcase__tabs { gap: 20px; bottom: 24px; }
+  .landing .showcase__tab { font-size: 15px; }
+  .landing .foot { padding-top: 64px; }
+  .landing .foot__grid { grid-template-columns: 1fr 1fr; gap: 40px 24px; }
+  .landing .foot__brand { grid-column: 1 / -1; }
+  .landing .foot__legal { margin-top: 48px; flex-direction: column; gap: 8px; }
+}
