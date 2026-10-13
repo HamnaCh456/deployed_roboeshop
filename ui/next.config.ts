@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 
-// The UI calls /api/... on its own origin. The assistant (/api/query/stream)
-// is a route handler here; the catalogue and tutorials still come from the
-// mock server, so those three paths are forwarded to it. The mock server
-// already strips a leading /api, so either shape of destination works.
-const CATALOG_API_URL = process.env.CATALOG_API_URL || "http://localhost:8009";
+// The UI calls /api/... on its own origin, and every one of those is a route
+// handler in this app: the assistant (/api/query/stream) and the catalogue,
+// tutorials and health routes, which read ui/data/ via src/server/catalog.ts.
+// Nothing is forwarded to the mock server any more, so a deploy is one app.
 
 const nextConfig: NextConfig = {
+  // The catalogue routes read ui/data/*.json at runtime with fs, which the
+  // bundler cannot see; include the folder in every API function explicitly.
+  outputFileTracingIncludes: {
+    "/api/**": ["./data/**"],
+  },
+
   // Product photos are plain <img> tags pointing at whichever supplier host
   // the scraper found them on, so there is no allowlist to maintain and
   // nothing for the image optimiser to do.
@@ -20,13 +25,6 @@ const nextConfig: NextConfig = {
 
   // Hide the dev-mode "Compiling..." pill in the bottom corner.
   devIndicators: false,
-
-  async rewrites() {
-    return ["catalog", "tutorials", "health"].map((route) => ({
-      source: `/api/${route}`,
-      destination: `${CATALOG_API_URL}/${route}`,
-    }));
-  },
 };
 
 export default nextConfig;

@@ -17,6 +17,7 @@ import { systemPrompt } from "../../../../agent/prompt";
 import { DONE, FIXED_REPLIES, SSE_HEADERS, encodeEvent, fixedReply } from "../../../../agent/sse";
 import { makeTools, type TurnState } from "../../../../agent/tools";
 import { runLocalFallback } from "../../../../agent/localFallback";
+import { LOCAL_CATALOG_BASE, localCatalogFetch } from "../../../../server/catalog";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -99,10 +100,9 @@ export async function POST(req: Request): Promise<Response> {
         // chat is never completely dead. Streams text + real product cards with
         // zero API calls.
         try {
-          const CATALOG_API_URL = process.env.CATALOG_API_URL || "http://127.0.0.1:8009";
           const { text, cards, applied } = await runLocalFallback(query, {
-            fetch,
-            baseUrl: CATALOG_API_URL,
+            fetch: localCatalogFetch as typeof fetch,
+            baseUrl: LOCAL_CATALOG_BASE,
           });
           // Stream text word-by-word for a natural feel
           const words = text.split(" ");

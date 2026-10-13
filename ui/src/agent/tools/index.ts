@@ -12,10 +12,9 @@ import type { ToolSet } from "ai";
 import { createFileCache, makeFindVideoTutorialsTool, type VideoCache } from "./findVideoTutorials";
 import { makeSearchCatalogTool, type TurnState } from "./searchCatalog";
 import { makeGenerateBomTool } from "./generateBom";
+import { LOCAL_CATALOG_BASE, localCatalogFetch } from "../../server/catalog";
 
 export type { TurnState } from "./searchCatalog";
-
-const CATALOG_API_URL = process.env.CATALOG_API_URL || "http://localhost:8009";
 
 let videoCache: VideoCache | null = null;
 
@@ -25,7 +24,8 @@ function cache(): VideoCache {
 }
 
 export function makeTools(turn: TurnState): ToolSet {
-  const deps = { fetch, baseUrl: CATALOG_API_URL };
+  // The catalogue is answered in-process (src/server/catalog.ts), not over HTTP.
+  const deps = { fetch: localCatalogFetch as typeof fetch, baseUrl: LOCAL_CATALOG_BASE };
   const search = makeSearchCatalogTool(turn, deps);
   const bom = makeGenerateBomTool(turn, deps);
   const key = process.env.SERPAPI_KEY;
